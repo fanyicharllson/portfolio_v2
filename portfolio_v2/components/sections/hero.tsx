@@ -30,6 +30,14 @@ interface HeroSectionProps {
   }[];
 }
 
+const handleNavigation = (href: string) => {
+  const element = document.querySelector(href);
+
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
 export default function HeroSection({
   isClient,
   isLoaded,
@@ -152,7 +160,10 @@ export default function HeroSection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 1 }}
             >
-              <Button className="relative overflow-hidden group bg-gradient-to-r from-cyan-500 via-blue-600 to-emerald-500 hover:from-emerald-500 hover:via-blue-600 hover:to-cyan-500 border-0 px-8 sm:px-12 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-2xl shadow-2xl">
+              <Button
+                className="relative overflow-hidden group bg-gradient-to-r from-cyan-500 via-blue-600 to-emerald-500 hover:from-emerald-500 hover:via-blue-600 hover:to-cyan-500 border-0 px-8 sm:px-12 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-2xl shadow-2xl"
+                onClick={() => handleNavigation("#projects")}
+              >
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
                   transition={{ duration: 0.3 }}
@@ -175,6 +186,7 @@ export default function HeroSection({
               <Button
                 variant="outline"
                 className="border-2 border-slate-600 text-slate-200 hover:text-white hover:border-cyan-400 hover:bg-cyan-400/10 px-8 sm:px-12 py-4 sm:py-5 text-base sm:text-lg font-bold rounded-2xl backdrop-blur-md relative overflow-hidden group"
+                onClick={() => handleNavigation("#contact")}
               >
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100"

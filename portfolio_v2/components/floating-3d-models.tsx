@@ -1,20 +1,28 @@
-"use client"
+"use client";
 
-import { useRef, useState, Suspense } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { Float, Text3D, OrbitControls, Environment, PerspectiveCamera } from "@react-three/drei"
-import { motion } from "framer-motion"
-import type * as THREE from "three"
+import { useRef, useState, Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  Float,
+  Text3D,
+  OrbitControls,
+  Environment,
+  PerspectiveCamera,
+} from "@react-three/drei";
+import { motion } from "framer-motion";
+import type * as THREE from "three";
 
 function FloatingLaptop() {
-  const meshRef = useRef<THREE.Mesh>(null)
+  const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.05
+      meshRef.current.rotation.y =
+        Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      meshRef.current.rotation.x =
+        Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
     }
-  })
+  });
 
   return (
     <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
@@ -33,46 +41,61 @@ function FloatingLaptop() {
       {/* Screen Content */}
       <mesh position={[0, 1, -0.85]} rotation={[-0.1, 0, 0]}>
         <planeGeometry args={[2.6, 1.6]} />
-        <meshStandardMaterial color="#06b6d4" emissive="#06b6d4" emissiveIntensity={0.3} />
+        <meshStandardMaterial
+          color="#06b6d4"
+          emissive="#06b6d4"
+          emissiveIntensity={0.3}
+        />
       </mesh>
     </Float>
-  )
+  );
 }
 
 function FloatingCode() {
-  const textRef = useRef<THREE.Mesh>(null)
+  const textRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (textRef.current) {
-      textRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.2
+      textRef.current.rotation.y =
+        Math.sin(state.clock.elapsedTime * 0.8) * 0.2;
     }
-  })
+  });
 
   return (
     <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-      <Text3D ref={textRef} font="/fonts/Geist_Bold.json" size={0.5} height={0.1} position={[-1, 0, 0]}>
+      <Text3D
+        ref={textRef}
+        font="/fonts/helvetiker_regular.typeface.json"
+        size={0.5}
+        height={0.1}
+        position={[-1, 0, 0]}
+      >
         {"</>"}
-        <meshStandardMaterial color="#0ea5e9" emissive="#0ea5e9" emissiveIntensity={0.2} />
+        <meshStandardMaterial
+          color="#0ea5e9"
+          emissive="#0ea5e9"
+          emissiveIntensity={0.2}
+        />
       </Text3D>
     </Float>
-  )
+  );
 }
 
 function TechIcons() {
-  const iconsRef = useRef<THREE.Group>(null)
+  const iconsRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     if (iconsRef.current) {
-      iconsRef.current.rotation.y = state.clock.elapsedTime * 0.3
+      iconsRef.current.rotation.y = state.clock.elapsedTime * 0.3;
     }
-  })
+  });
 
   const technologies = [
     { name: "React", color: "#61dafb", position: [2, 1, 0] },
     { name: "Next", color: "#ffffff", position: [-2, 1, 0] },
     { name: "TS", color: "#3178c6", position: [0, 2, 1] },
     { name: "JS", color: "#f7df1e", position: [0, -1, -1] },
-  ]
+  ];
 
   return (
     <group ref={iconsRef}>
@@ -89,10 +112,14 @@ function TechIcons() {
             />
           </mesh>
           <Text3D
-            font="/fonts/Geist_Bold.json"
+            font="/fonts/helvetiker_regular.typeface.json"
             size={0.15}
             height={0.02}
-            position={[tech.position[0] - 0.1, tech.position[1] - 0.5, tech.position[2]]}
+            position={[
+              tech.position[0] - 0.1,
+              tech.position[1] - 0.5,
+              tech.position[2],
+            ]}
           >
             {tech.name}
             <meshStandardMaterial color={tech.color} />
@@ -100,11 +127,13 @@ function TechIcons() {
         </Float>
       ))}
     </group>
-  )
+  );
 }
 
 export function Floating3DModels() {
-  const [activeModel, setActiveModel] = useState<"laptop" | "code" | "tech">("laptop")
+  const [activeModel, setActiveModel] = useState<"laptop" | "code" | "tech">(
+    "laptop"
+  );
 
   return (
     <motion.div
@@ -121,7 +150,11 @@ export function Floating3DModels() {
 
           <ambientLight intensity={0.4} />
           <pointLight position={[10, 10, 10]} intensity={1} color="#06b6d4" />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#0ea5e9" />
+          <pointLight
+            position={[-10, -10, -10]}
+            intensity={0.5}
+            color="#0ea5e9"
+          />
 
           <Suspense fallback={null}>
             <Environment preset="city" />
@@ -159,5 +192,5 @@ export function Floating3DModels() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
