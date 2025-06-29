@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import Footer from "@/components/sections/footer";
 import Contact from "@/components/sections/contact";
 import Experience from "@/components/sections/experience";
-import Projects from "@/components/sections/projects";
 import Skill from "@/components/sections/skill";
 import About from "@/components/sections/about";
 import GithubStats from "@/components/sections/githubStats";
@@ -18,6 +17,7 @@ import Terminal from "@/components/sections/terminal";
 import Stats from "@/components/sections/stats";
 import HeroSection from "@/components/sections/hero";
 import BackgroundEffect from "@/components/sections/backgroundEffect";
+import Projects from "@/components/sections/filter_sections_projects/projects";
 
 export default function Portfolio() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,7 +32,7 @@ export default function Portfolio() {
 
     // Generate particles only on client
     setParticles(
-      Array.from({ length: 20 }).map(() => ({
+      Array.from({ length: 8 }).map(() => ({
         left: Math.random() * 100,
         top: Math.random() * 100,
         duration: 4 + Math.random() * 4,

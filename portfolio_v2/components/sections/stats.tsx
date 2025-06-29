@@ -16,7 +16,7 @@ export default function Stats() {
           >
             {[
               {
-                number: "50+",
+                number: "15+",
                 label: "Projects Completed",
                 icon: Code,
                 color: "from-cyan-500 to-blue-600",
@@ -28,7 +28,7 @@ export default function Stats() {
                 color: "from-blue-500 to-purple-600",
               },
               {
-                number: "25+",
+                number: "2+",
                 label: "Happy Clients",
                 icon: Globe,
                 color: "from-emerald-500 to-teal-600",

@@ -47,21 +47,25 @@ export default function About() {
             <div className="space-y-6 sm:space-y-8">
               <GlassmorphicCard>
                 <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
-                  I`&apos;m a passionate software engineer with experience
-                  building web applications and digital products. I specialize
-                  in frontend development with React and Next.js, but I`&apos;m
-                  also comfortable working with backend technologies.
+                  I&apos;m a Builder & CTO-Minded Software Architect with a deep
+                  passion for crafting full-stack systems — from idea to
+                  deployment. I specialize in architecting scalable
+                  applications, building with modern tools like React, Next.js,
+                  Spring Boot, and orchestrating the entire dev flow across
+                  frontend, backend, and infrastructure.
                 </p>
                 <p className="text-base sm:text-lg text-slate-300 mt-4 sm:mt-6 leading-relaxed">
-                  My journey in tech started with a strong foundation in
-                  software development. I`&apos;ve worked with various companies
-                  to create intuitive, performant, and accessible digital
-                  experiences.
+                  My journey into tech has been hands-on, ambitious, and deeply
+                  rooted in real-world problem solving. I&apos;ve designed and
+                  delivered everything from microservice SaaS platforms to
+                  JavaFX desktop systems and even UE5 game logic — all with
+                  intentional design and clean, maintainable code.
                 </p>
                 <p className="text-base sm:text-lg text-slate-300 mt-4 sm:mt-6 leading-relaxed">
-                  When I`&apos;m not coding, you can find me exploring new
-                  technologies, contributing to open-source projects, and
-                  staying up-to-date with the latest industry trends.
+                  Beyond coding, I&apos;m constantly exploring new technologies,
+                  refining system design patterns, contributing to developer
+                  communities, and building products that make an impact. I
+                  believe in shipping fast, learning fast, and scaling smart.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-8 sm:mt-10">
@@ -70,7 +74,7 @@ export default function About() {
                       Name
                     </div>
                     <div className="font-semibold text-slate-200">
-                      Shine Kyaw Kyaw Aung
+                      Fanyi Charllson Fanyi
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -78,14 +82,16 @@ export default function About() {
                       Email
                     </div>
                     <div className="font-semibold text-slate-200">
-                      hello@example.com
+                      fanyicharllson@gmail.com
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="text-sm text-slate-500 font-medium">
                       Location
                     </div>
-                    <div className="font-semibold text-slate-200">Myanmar</div>
+                    <div className="font-semibold text-slate-200">
+                      Cameroon, Yaounde
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <div className="text-sm text-slate-500 font-medium">

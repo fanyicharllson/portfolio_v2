@@ -94,9 +94,9 @@ export function FloatingNav() {
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-                        Shine
+                        Fanyi
                       </span>
-                      <span className="text-white">KKA</span>
+                      <span className="text-white">CF</span>
                     </Link>
                     <Button
                       variant="ghost"
@@ -143,9 +143,9 @@ export function FloatingNav() {
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-                        Shine
+                        Fanyi
                       </span>
-                      <span className="text-white">KKA</span>
+                      <span className="text-white">CF</span>
                     </Link>
 
                     <div className="flex items-center gap-1">
