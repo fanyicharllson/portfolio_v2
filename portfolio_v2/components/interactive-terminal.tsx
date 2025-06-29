@@ -38,12 +38,12 @@ export function InteractiveTerminal() {
     },
     about: {
       output: [
-        "👨‍💻 Shine Kyaw Kyaw Aung",
-        "🚀 Full-Stack Developer & Tech Innovator",
-        "📍 Based in Myanmar",
+        "👨‍💻 Fanyi Charllson Fanyi",
+        "🚀 Builder & CTO-Minded Software Architect",
+        "📍 Based in Cameroon",
         "💡 Passionate about creating digital solutions",
         "🎯 3+ years of professional experience",
-        "🌟 Specialized in React, Next.js, and modern web technologies",
+        "🌟 Specialized in React, Next.js, and modern web technologies including mobile application development",
       ],
       type: "success" as const,
     },
@@ -51,7 +51,7 @@ export function InteractiveTerminal() {
       output: [
         "🔧 Technical Skills:",
         "  Frontend: React, Next.js, TypeScript, Tailwind CSS",
-        "  Backend: Node.js, Python, PostgreSQL, MongoDB",
+        "  Backend: Node.js, Python, PostgreSQL, MongoDB, Spring Boot",
         "  Tools: Git, Docker, AWS, Vercel",
         "  Languages: JavaScript (92%), TypeScript (88%), Python (80%)",
         "  Frameworks: React (95%), Next.js (90%), Node.js (85%)",
@@ -87,7 +87,7 @@ export function InteractiveTerminal() {
     },
     whoami: {
       output: [
-        "guest@shine-portfolio:~$ whoami",
+        "fanyi@charllson-portfolio:~$ whoami",
         "You are: Visitor",
         "Access Level: Guest",
         "Session: Active",
@@ -169,7 +169,7 @@ export function InteractiveTerminal() {
     const welcomeCommand: Command = {
       input: "",
       output: [
-        "🚀 Welcome to Shine's Interactive Terminal!",
+        "🚀 Welcome to Fanyi's Interactive Terminal!",
         "Type 'help' to see available commands.",
         "Explore my portfolio through the command line!",
       ],
@@ -199,7 +199,7 @@ export function InteractiveTerminal() {
             </div>
             <div className="flex items-center gap-2 text-slate-300">
               <Terminal className="h-4 w-4" />
-              <span className="text-xs sm:text-sm font-medium">shine@portfolio:~</span>
+              <span className="text-xs sm:text-sm font-medium">fanyicharllson@portfolio:~</span>
             </div>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -226,7 +226,7 @@ export function InteractiveTerminal() {
               >
                 {command.input && (
                   <div className="flex items-center gap-2 text-cyan-400 mb-2 flex-wrap">
-                    <span className="text-emerald-400 text-xs sm:text-sm">guest@shine-portfolio:~$</span>
+                    <span className="text-emerald-400 text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
                     <span className="break-all">{command.input}</span>
                   </div>
                 )}
@@ -261,7 +261,7 @@ export function InteractiveTerminal() {
               animate={{ opacity: 1 }}
               className="flex items-center gap-2 text-slate-400 flex-wrap"
             >
-              <span className="text-emerald-400 text-xs sm:text-sm">guest@shine-portfolio:~$</span>
+              <span className="text-emerald-400 text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
               <div className="flex items-center gap-1">
                 <span>Processing</span>
                 <motion.div
@@ -279,7 +279,7 @@ export function InteractiveTerminal() {
 
           {/* Input Line */}
           <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-4 flex-wrap">
-            <span className="text-emerald-400 font-mono text-xs sm:text-sm">guest@shine-portfolio:~$</span>
+            <span className="text-emerald-400 font-mono text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
             <input
               ref={inputRef}
               type="text"

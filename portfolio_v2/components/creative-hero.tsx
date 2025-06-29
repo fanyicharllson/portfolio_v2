@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export function CreativeHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -412,15 +413,22 @@ export function CreativeHero() {
 
             {/* Inner image container */}
             <div className="absolute inset-2 rounded-full overflow-hidden bg-slate-900">
-              <motion.img
-                src="/placeholder.svg?height=400&width=400"
-                alt="Profile"
-                className="w-full h-full object-cover"
+              <motion.div
                 animate={{
                   scale: isHovered ? 1.1 : 1,
                 }}
                 transition={{ duration: 0.8 }}
-              />
+                className="w-full h-full"
+              >
+                <Image
+                  src="/me.png"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  priority
+                  width={600}
+                  height={400}
+                />
+              </motion.div>
 
               {/* Magical overlay effects */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
