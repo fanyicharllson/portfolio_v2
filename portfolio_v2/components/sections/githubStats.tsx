@@ -13,7 +13,7 @@ export default function GithubStats() {
           />
 
           <div className="mt-16 sm:mt-20">
-            <GitHubStats />
+            <GitHubStats username="fanyicharllson" />
           </div>
         </div>
       </section>

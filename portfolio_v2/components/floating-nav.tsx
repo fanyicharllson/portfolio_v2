@@ -158,7 +158,7 @@ export function FloatingNav() {
                         >
                           <button
                             onClick={() => handleNavClick(item.href)}
-                            className="relative px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-all duration-300 rounded-2xl group overflow-hidden"
+                            className="relative px-4 py-2 text-sm font-medium text-slate-400 hover:text-white transition-all duration-300 rounded-2xl group overflow-hidden cursor-pointer"
                           >
                             <motion.div
                               className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 rounded-2xl"
@@ -181,7 +181,7 @@ export function FloatingNav() {
                       >
                         <Button
                           size="sm"
-                          className="relative overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-6 py-2 text-sm group"
+                          className="relative overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-6 py-2 text-sm group cursor-pointer"
                         >
                           <motion.div
                             className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
@@ -236,7 +236,7 @@ export function FloatingNav() {
                   >
                     <button
                       onClick={() => handleNavClick(item.href)}
-                      className="relative block px-8 py-4 text-3xl font-medium text-white hover:text-cyan-400 transition-all duration-300 group"
+                      className="relative block px-8 py-4 text-3xl font-medium text-white hover:text-cyan-400 transition-all duration-300 group cursor-pointer"
                     >
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 rounded-2xl"
@@ -254,7 +254,7 @@ export function FloatingNav() {
                   transition={{ delay: navItems.length * 0.1 + 0.2, duration: 0.3 }}
                   className="pt-8"
                 >
-                  <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-8 py-4 text-lg">
+                  <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-8 py-4 text-lg cursor-pointer">
                     Resume
                   </Button>
                 </motion.div>

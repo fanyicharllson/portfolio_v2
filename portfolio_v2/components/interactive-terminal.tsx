@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Terminal } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Terminal } from "lucide-react";
 
 interface Command {
-  input: string
-  output: string[]
-  type: "success" | "error" | "info"
+  input: string;
+  output: string[];
+  type: "success" | "error" | "info";
 }
 
 export function InteractiveTerminal() {
-  const [input, setInput] = useState("")
-  const [history, setHistory] = useState<Command[]>([])
-  const [isTyping, setIsTyping] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const terminalRef = useRef<HTMLDivElement>(null)
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState<Command[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   const commands = {
     help: {
@@ -73,16 +73,20 @@ export function InteractiveTerminal() {
     contact: {
       output: [
         "📧 Contact Information:",
-        "  Email: hello@example.com",
-        "  LinkedIn: linkedin.com/in/shinekyawkyawaung",
-        "  GitHub: github.com/shinekyawkyawaung",
+        "  Email: fanyicharllson@gmail.com",
+        "  LinkedIn: linkedin.com/in/fanyi-charllson",
+        "  GitHub: github.com/fanyicharllson",
         "  Status: Available for opportunities",
         "  Response Time: Usually within 24 hours",
       ],
       type: "success" as const,
     },
     resume: {
-      output: ["📄 Resume download initiated...", "✅ Resume.pdf downloaded successfully!", "📊 Total downloads: 247"],
+      output: [
+        "📄 Resume download initiated...",
+        "✅ Resume.pdf downloaded successfully!",
+        "📊 Total downloads: 247",
+      ],
       type: "success" as const,
     },
     whoami: {
@@ -111,58 +115,64 @@ export function InteractiveTerminal() {
       output: [],
       type: "info" as const,
     },
-  }
+  };
 
   const handleCommand = async (cmd: string) => {
-    const trimmedCmd = cmd.trim().toLowerCase()
-    setIsTyping(true)
+    const trimmedCmd = cmd.trim().toLowerCase();
+    setIsTyping(true);
 
     // Add input to history
     const newCommand: Command = {
       input: cmd,
       output: [],
       type: "info",
-    }
+    };
 
     if (trimmedCmd === "clear") {
-      setHistory([])
-      setIsTyping(false)
-      return
+      setHistory([]);
+      setIsTyping(false);
+      return;
     }
 
     if (trimmedCmd.startsWith("cat ")) {
-      const filename = trimmedCmd.substring(4)
-      newCommand.output = [`cat: ${filename}: File not found`, "Available files: README.md, package.json, .env"]
-      newCommand.type = "error"
+      const filename = trimmedCmd.substring(4);
+      newCommand.output = [
+        `cat: ${filename}: File not found`,
+        "Available files: README.md, package.json, .env",
+      ];
+      newCommand.type = "error";
     } else if (commands[trimmedCmd as keyof typeof commands]) {
-      const command = commands[trimmedCmd as keyof typeof commands]
-      newCommand.output = command.output
-      newCommand.type = command.type
+      const command = commands[trimmedCmd as keyof typeof commands];
+      newCommand.output = command.output;
+      newCommand.type = command.type;
     } else {
-      newCommand.output = [`Command '${cmd}' not found.`, "Type 'help' for available commands."]
-      newCommand.type = "error"
+      newCommand.output = [
+        `Command '${cmd}' not found.`,
+        "Type 'help' for available commands.",
+      ];
+      newCommand.type = "error";
     }
 
     // Simulate typing delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    setHistory((prev) => [...prev, newCommand])
-    setIsTyping(false)
-  }
+    setHistory((prev) => [...prev, newCommand]);
+    setIsTyping(false);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (input.trim()) {
-      handleCommand(input)
-      setInput("")
+      handleCommand(input);
+      setInput("");
     }
-  }
+  };
 
   useEffect(() => {
     if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [history, isTyping])
+  }, [history, isTyping]);
 
   useEffect(() => {
     // Welcome message
@@ -174,9 +184,9 @@ export function InteractiveTerminal() {
         "Explore my portfolio through the command line!",
       ],
       type: "success",
-    }
-    setHistory([welcomeCommand])
-  }, [])
+    };
+    setHistory([welcomeCommand]);
+  }, []);
 
   return (
     <motion.div
@@ -199,7 +209,9 @@ export function InteractiveTerminal() {
             </div>
             <div className="flex items-center gap-2 text-slate-300">
               <Terminal className="h-4 w-4" />
-              <span className="text-xs sm:text-sm font-medium">fanyicharllson@portfolio:~</span>
+              <span className="text-xs sm:text-sm font-medium">
+                fanyicharllson@portfolio:~
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -226,7 +238,9 @@ export function InteractiveTerminal() {
               >
                 {command.input && (
                   <div className="flex items-center gap-2 text-cyan-400 mb-2 flex-wrap">
-                    <span className="text-emerald-400 text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
+                    <span className="text-emerald-400 text-xs sm:text-sm">
+                      fanyi@charllson-portfolio:~$
+                    </span>
                     <span className="break-all">{command.input}</span>
                   </div>
                 )}
@@ -235,8 +249,8 @@ export function InteractiveTerminal() {
                     command.type === "error"
                       ? "text-red-400"
                       : command.type === "success"
-                        ? "text-emerald-400"
-                        : "text-slate-300"
+                      ? "text-emerald-400"
+                      : "text-slate-300"
                   }`}
                 >
                   {command.output.map((line, lineIndex) => (
@@ -261,7 +275,9 @@ export function InteractiveTerminal() {
               animate={{ opacity: 1 }}
               className="flex items-center gap-2 text-slate-400 flex-wrap"
             >
-              <span className="text-emerald-400 text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
+              <span className="text-emerald-400 text-xs sm:text-sm">
+                fanyi@charllson-portfolio:~$
+              </span>
               <div className="flex items-center gap-1">
                 <span>Processing</span>
                 <motion.div
@@ -278,8 +294,13 @@ export function InteractiveTerminal() {
           )}
 
           {/* Input Line */}
-          <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-4 flex-wrap">
-            <span className="text-emerald-400 font-mono text-xs sm:text-sm">fanyi@charllson-portfolio:~$</span>
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center gap-2 mt-4 flex-wrap"
+          >
+            <span className="text-emerald-400 font-mono text-xs sm:text-sm">
+              fanyi@charllson-portfolio:~$
+            </span>
             <input
               ref={inputRef}
               type="text"
@@ -304,8 +325,8 @@ export function InteractiveTerminal() {
               <button
                 key={cmd}
                 onClick={() => {
-                  setInput(cmd)
-                  inputRef.current?.focus()
+                  setInput(cmd);
+                  inputRef.current?.focus();
                 }}
                 className="px-2 sm:px-3 py-1 text-xs rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 hover:text-cyan-400 transition-colors border border-slate-600/50"
               >
@@ -316,5 +337,5 @@ export function InteractiveTerminal() {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

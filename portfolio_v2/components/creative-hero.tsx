@@ -309,6 +309,7 @@ export function CreativeHero() {
                   className="w-full h-full object-cover"
                   width={500}
                   height={400}
+                  priority
                 />
               </motion.div>
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
