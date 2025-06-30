@@ -25,6 +25,13 @@ export function ContactForm() {
   useEffect(() => {
     if (state.succeeded) {
       setShowSuccess(true);
+      // Reset form fields
+      setForm({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
       const timer = setTimeout(() => setShowSuccess(false), 5000);
       return () => clearTimeout(timer);
     }

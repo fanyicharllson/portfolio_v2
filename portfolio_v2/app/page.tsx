@@ -20,6 +20,7 @@ import Projects from "@/components/sections/filter_sections_projects/projects";
 import Skills from "@/components/sections/skill_slider/skills";
 import MessageMeOnWhatsApp from "@/components/chat-whatsapp";
 import { VoiceAssistant } from "@/components/ai/voice-assistance";
+import { BackgroundMusic } from "@/components/music/background-music";
 
 export default function Portfolio() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -64,6 +65,7 @@ export default function Portfolio() {
       <ThemeToggle />
       <SoundEffects />
       <MessageMeOnWhatsApp />
+      <BackgroundMusic/>
 
       {/* Enhanced Hero Section */}
       <HeroSection

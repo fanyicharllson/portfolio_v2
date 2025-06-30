@@ -11,6 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface GitHubStats {
   totalRepos: number;
@@ -132,7 +133,12 @@ export function GitHubStats({ username }: GitHubStatsProps) {
                 <h3 className="text-2xl font-bold text-slate-100">
                   GitHub Activity
                 </h3>
-                <p className="text-slate-400">@{username}</p>
+                <Link
+                  href={`https://github.com/${username}`}
+                  className="text-slate-400 cursor-pointer"
+                >
+                  @{username}
+                </Link>
               </div>
             </div>
             <button
