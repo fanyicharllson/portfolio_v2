@@ -18,6 +18,8 @@ import HeroSection from "@/components/sections/hero";
 import BackgroundEffect from "@/components/sections/backgroundEffect";
 import Projects from "@/components/sections/filter_sections_projects/projects";
 import Skills from "@/components/sections/skill_slider/skills";
+import MessageMeOnWhatsApp from "@/components/chat-whatsapp";
+import { VoiceAssistant } from "@/components/ai/voice-assistance";
 
 export default function Portfolio() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -27,6 +29,8 @@ export default function Portfolio() {
   >([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     // Mark as client-side
     setIsClient(true);
 
@@ -59,6 +63,7 @@ export default function Portfolio() {
       <FloatingNav />
       <ThemeToggle />
       <SoundEffects />
+      <MessageMeOnWhatsApp />
 
       {/* Enhanced Hero Section */}
       <HeroSection
@@ -86,6 +91,14 @@ export default function Portfolio() {
       <Contact />
       {/* Footer */}
       <Footer />
+
+      {/* Voice ai */}
+      <VoiceAssistant
+        onCommand={(command) => {
+          console.log("Voice command received:", command);
+          // You can add additional command handling here
+        }}
+      />
     </div>
   );
 }
