@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, Suspense } from "react";
+import { useRef, useState, Suspense, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Float,
@@ -11,6 +11,10 @@ import {
 } from "@react-three/drei";
 import { motion } from "framer-motion";
 import type * as THREE from "three";
+import { ModelErrorBoundary } from "./errorboundary";
+import { RGBELoader } from "three-stdlib";
+import { toast } from "sonner";
+// import SafeEnvironment from "./3dEnvironment";
 
 function FloatingLaptop() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -49,6 +53,33 @@ function FloatingLaptop() {
       </mesh>
     </Float>
   );
+}
+
+// Load envronment for 3d(hdri)
+function SafeEnvironment() {
+  const [hdrTexture, setHdrTexture] = useState<THREE.Texture | null>(null);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const loader = new RGBELoader();
+        const texture = await loader.loadAsync("/hdri/potsdamer_platz_1k.hdr");
+        setHdrTexture(texture);
+      } catch (err) {
+        console.error("HDR Load Failed", err);
+        toast.error(
+          "⚠️ 3D background failed to load. Please check your network.",
+          { duration: 7000 }
+        );
+      }
+    };
+
+    load();
+  }, []);
+
+  return hdrTexture ? (
+    <Environment map={hdrTexture} background={false} />
+  ) : null;
 }
 
 function FloatingCode() {
@@ -144,25 +175,27 @@ export function Floating3DModels() {
       viewport={{ once: true }}
     >
       <div className="absolute inset-0 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-sm border border-slate-700/50">
-        <Canvas>
-          <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-          <OrbitControls enableZoom={false} enablePan={false} />
+        <ModelErrorBoundary>
+          <Canvas>
+            <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+            <OrbitControls enableZoom={false} enablePan={false} />
 
-          <ambientLight intensity={0.4} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#06b6d4" />
-          <pointLight
-            position={[-10, -10, -10]}
-            intensity={0.5}
-            color="#0ea5e9"
-          />
+            <ambientLight intensity={0.4} />
+            <pointLight position={[10, 10, 10]} intensity={1} color="#06b6d4" />
+            <pointLight
+              position={[-10, -10, -10]}
+              intensity={0.5}
+              color="#0ea5e9"
+            />
 
-          <Suspense fallback={null}>
-            <Environment preset="city" />
-            {activeModel === "laptop" && <FloatingLaptop />}
-            {activeModel === "code" && <FloatingCode />}
-            {activeModel === "tech" && <TechIcons />}
-          </Suspense>
-        </Canvas>
+            <Suspense fallback={null}>
+              <SafeEnvironment />
+              {activeModel === "laptop" && <FloatingLaptop />}
+              {activeModel === "code" && <FloatingCode />}
+              {activeModel === "tech" && <TechIcons />}
+            </Suspense>
+          </Canvas>
+        </ModelErrorBoundary>
 
         {/* Loading indicator that shows while 3D models are loading */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
