@@ -65,7 +65,7 @@ export default function Portfolio() {
       <ThemeToggle />
       <SoundEffects />
       <MessageMeOnWhatsApp />
-      <BackgroundMusic/>
+      <BackgroundMusic />
 
       {/* Enhanced Hero Section */}
       <HeroSection

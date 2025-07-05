@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export function LoadingScreen() {
-  const [progress, setProgress] = useState(0)
-  const [isComplete, setIsComplete] = useState(false)
+  const [progress, setProgress] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     // Simulate loading progress
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval)
-          setTimeout(() => setIsComplete(true), 500)
-          return 100
+          clearInterval(interval);
+          setTimeout(() => setIsComplete(true), 500);
+          return 100;
         }
-        return prev + 5
-      })
-    }, 100)
+        return prev + 5;
+      });
+    }, 100);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
-  if (isComplete) return null
+  if (isComplete) return null;
 
   return (
     <motion.div
@@ -43,12 +43,20 @@ export function LoadingScreen() {
           <motion.div
             className="absolute inset-0 rounded-full border-4 border-cyan-500/30"
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
           />
           <motion.div
             className="absolute inset-2 rounded-full border-4 border-t-transparent border-blue-500"
             animate={{ rotate: -360 }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+            transition={{
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-xl font-bold text-cyan-400">{progress}%</span>
@@ -77,5 +85,5 @@ export function LoadingScreen() {
         Loading amazing portfolio...
       </motion.p>
     </motion.div>
-  )
+  );
 }

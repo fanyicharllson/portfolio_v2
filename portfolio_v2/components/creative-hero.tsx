@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import ImageTitleBanner from "./image-title-banner";
 
 export function CreativeHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -228,6 +229,10 @@ export function CreativeHero() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
+
+      {/* Title banner on image */}
+      <ImageTitleBanner />
+
       {/* Optimized Canvas Background */}
       {isVisible && (
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />

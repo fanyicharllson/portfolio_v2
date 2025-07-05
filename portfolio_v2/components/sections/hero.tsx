@@ -60,6 +60,8 @@ export default function HeroSection({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
+
+            {/* Title in top browser */}
             <div className="inline-block">
               <motion.div
                 className="relative px-4 sm:px-6 py-3 sm:py-3 text-sm font-semibold rounded-3xl bg-slate-800/60 backdrop-blur-2xl border border-cyan-400/40 mb-6 sm:mb-8 overflow-hidden"
