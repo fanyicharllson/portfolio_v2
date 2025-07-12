@@ -11,14 +11,21 @@ import {
   SkipForward,
   SkipBack,
   AlertCircle,
+  Trash2,
+  FileAudio,
+  X,
+  Upload,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { playlist } from "@/public/myMusic";
+import { defaultPlaylist, Track } from "@/public/myMusic";
+import { toast } from "@/hooks/use-toast";
 
 export function BackgroundMusic() {
+  const [playlist, setPlaylist] = useState<Track[]>(defaultPlaylist);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [volume, setVolume] = useState(0.3);
@@ -29,6 +36,15 @@ export function BackgroundMusic() {
   const [hasError, setHasError] = useState(false);
   const [showSetupMessage, setShowSetupMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Upladong custom Music
+  const customObjectUrls = useRef<Set<string>>(new Set());
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Upload states
+  const [isUploading, setIsUploading] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
@@ -109,6 +125,189 @@ export function BackgroundMusic() {
       }
     };
   }, [isPlaying]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cleanupObjectUrls();
+    };
+  }, []);
+
+  // Cleanup function for object URLs(Clean up mp3 files after use)
+  const cleanupObjectUrls = () => {
+    customObjectUrls.current.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+    customObjectUrls.current.clear();
+  };
+
+  // Get audio duration
+  const getAudioDuration = (file: File): Promise<number> => {
+    return new Promise((resolve) => {
+      const audio = new Audio();
+      const objectUrl = URL.createObjectURL(file);
+
+      audio.addEventListener("loadedmetadata", () => {
+        const duration = audio.duration || 180; // fallback to 3 minutes
+        URL.revokeObjectURL(objectUrl);
+        resolve(duration);
+      });
+
+      audio.addEventListener("error", () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(180); // fallback duration
+      });
+
+      audio.src = objectUrl;
+    });
+  };
+
+  // Handle file upload
+  const handleFileUpload = async (files: FileList | File[]) => {
+    setIsUploading(true);
+
+    try {
+      const fileArray = Array.from(files);
+      const validFiles = fileArray.filter(validateFile);
+
+      if (validFiles.length === 0) {
+        setIsUploading(false);
+        return;
+      }
+
+      const newTracks: Track[] = [];
+
+      for (const file of validFiles) {
+        const objectUrl = URL.createObjectURL(file);
+        customObjectUrls.current.add(objectUrl);
+
+        const duration = await getAudioDuration(file);
+
+        const track: Track = {
+          id: `custom-${Date.now()}-${Math.random()}`,
+          title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+          artist: "Custom Upload",
+          url: objectUrl,
+          duration,
+          scrollSpeed: 0.5,
+          isCustom: true,
+          file,
+          objectUrl,
+        };
+
+        newTracks.push(track);
+      }
+
+      setPlaylist((prev) => [...prev, ...newTracks]);
+
+      setIsExpanded(true);
+
+      toast({
+        title: "Music Uploaded! 🎵",
+        description: `Added ${newTracks.length} track(s) to your playlist.`,
+      });
+
+      setShowUpload(false);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload music files.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Remove custom track
+  const removeCustomTrack = (trackId: string) => {
+    const track = playlist.find((t) => t.id === trackId);
+    if (track?.isCustom && track.objectUrl) {
+      URL.revokeObjectURL(track.objectUrl);
+      customObjectUrls.current.delete(track.objectUrl);
+    }
+
+    setPlaylist((prev) => prev.filter((t) => t.id !== trackId));
+
+    // Adjust current track index if needed
+    const trackIndex = playlist.findIndex((t) => t.id === trackId);
+    if (trackIndex <= currentTrack && currentTrack > 0) {
+      setCurrentTrack(currentTrack - 1);
+    }
+
+    toast({
+      title: "Track Removed",
+      description: "Custom track removed and resources freed.",
+    });
+  };
+
+  // Clear all custom tracks
+  const clearCustomTracks = () => {
+    playlist.forEach((track) => {
+      if (track.isCustom && track.objectUrl) {
+        URL.revokeObjectURL(track.objectUrl);
+        customObjectUrls.current.delete(track.objectUrl);
+      }
+    });
+
+    setPlaylist(defaultPlaylist);
+    setCurrentTrack(0);
+
+    toast({
+      title: "Custom Music Cleared",
+      description: "All custom tracks removed and resources freed.",
+    });
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileUpload(files);
+    }
+  };
+
+  // File validation
+  const validateFile = (file: File): boolean => {
+    // Check file type
+    if (
+      !file.type.startsWith("audio/") ||
+      !file.name.toLowerCase().endsWith(".mp3")
+    ) {
+      toast({
+        title: "Invalid File Type",
+        description: "Please upload MP3 files only.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Check file size (50MB limit)
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    if (file.size > maxSize) {
+      toast({
+        title: "File Too Large",
+        description: "Please upload files smaller than 50MB.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   const togglePlay = async () => {
     const audio = audioRef.current;
@@ -201,6 +400,8 @@ export function BackgroundMusic() {
       ? (currentTime / audioRef.current.duration) * 100
       : 0;
 
+  const customTracksCount = playlist.filter((t) => t.isCustom).length;
+
   return (
     <>
       {/* Audio element */}
@@ -210,6 +411,109 @@ export function BackgroundMusic() {
         preload="metadata"
         crossOrigin="anonymous"
       />
+
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".mp3,audio/mp3"
+        multiple
+        onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+        className="hidden"
+      />
+
+      {/* Upload Modal */}
+      <AnimatePresence>
+        {showUpload && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowUpload(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md"
+            >
+              <Card className="p-6 bg-slate-900/95 backdrop-blur-md border-slate-700/50">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <FileAudio className="h-5 w-5 text-blue-400" />
+                      Upload Your Music
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowUpload(false)}
+                      className="text-slate-400 hover:text-white cursor-pointer"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="text-sm text-slate-300 space-y-2">
+                    <p>• Only MP3 files are supported</p>
+                    <p>• Maximum file size: 50MB</p>
+                    <p>• Files are automatically removed when you leave</p>
+                  </div>
+
+                  {/* Drag and Drop Area */}
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+                      dragOver
+                        ? "border-blue-400 bg-blue-400/10"
+                        : "border-slate-600 hover:border-slate-500 hover:bg-slate-800/50"
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <Upload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                    <p className="text-slate-300 font-medium mb-2">
+                      {dragOver
+                        ? "Drop your MP3 files here"
+                        : "Drag & drop MP3 files here"}
+                    </p>
+                    <p className="text-slate-500 text-sm mb-4">or</p>
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                    >
+                      {isUploading ? "Uploading..." : "Choose Files"}
+                    </Button>
+                  </div>
+
+                  {/* Custom tracks management */}
+                  {customTracksCount > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-slate-400">
+                          Custom tracks: {customTracksCount}
+                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={clearCustomTracks}
+                          className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Clear All
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Setup Message */}
       <AnimatePresence>
@@ -252,8 +556,26 @@ export function BackgroundMusic() {
               transition={{ duration: 0.2 }}
               className="mb-4"
             >
-              <Card className="p-4 w-80 bg-slate-900/95 backdrop-blur-md border-slate-700/50">
+              <Card className="p-4 w-80 bg-slate-900/95 backdrop-blur-md border-slate-700/50 overflow-y-auto max-h-95">
                 <div className="space-y-3">
+                  {/* Header with Upload Button */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-white text-sm">
+                      Music Player
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setShowUpload(true);
+                        setIsExpanded(false);
+                      }}
+                      className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 h-8 px-3 text-xs font-medium cursor-pointer"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Music
+                    </Button>
+                  </div>
                   {/* Track Info */}
                   <div className="text-center">
                     <h3 className="font-semibold text-white text-sm truncate">
@@ -378,29 +700,64 @@ export function BackgroundMusic() {
                   </div>
 
                   {/* Track List */}
-                  <div className="space-y-1 max-h-32 overflow-y-auto">
-                    <p className="text-xs text-slate-400 font-medium">
-                      Playlist:
-                    </p>
+                  <div className="space-y-1 max-h-40 overflow-y-auto">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-slate-400 font-medium">
+                        Playlist ({playlist.length} tracks)
+                      </p>
+                      {customTracksCount > 0 && (
+                        <span className="text-xs text-blue-400">
+                          {customTracksCount} custom
+                        </span>
+                      )}
+                    </div>
                     {playlist.map((track, index) => (
-                      <button
+                      <div
                         key={track.id}
-                        onClick={() => {
-                          setCurrentTrack(index);
-                          setCurrentTime(0);
-                          if (isPlaying) {
-                            setTimeout(() => audioRef.current?.play(), 100);
-                          }
-                        }}
-                        className={`w-full text-left text-xs p-1 rounded transition-colors ${
+                        className={`flex items-center justify-between text-xs p-1 rounded transition-colors ${
                           index === currentTrack
                             ? "bg-blue-600/30 text-blue-300"
                             : "text-slate-400 hover:text-slate-300 hover:bg-slate-800/50"
                         }`}
                       >
-                        {track.title} - {track.artist}
-                      </button>
+                        <button
+                          onClick={() => {
+                            setCurrentTrack(index);
+                            setCurrentTime(0);
+                            if (isPlaying) {
+                              setTimeout(() => audioRef.current?.play(), 100);
+                            }
+                          }}
+                          className="flex-1 text-left flex items-center gap-1"
+                        >
+                          {track.isCustom && (
+                            <FileAudio className="h-3 w-3 text-blue-400" />
+                          )}
+                          <span className="truncate">
+                            {track.title} - {track.artist}
+                          </span>
+                        </button>
+                        {track.isCustom && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeCustomTrack(track.id)}
+                            className="text-red-400 hover:text-red-300 h-6 w-6 p-0 ml-1"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     ))}
+                  </div>
+
+                  {/* Status */}
+                  <div className="text-xs text-slate-500 text-center pt-2 border-t border-slate-700/50">
+                    🎵 Custom Music Player •{" "}
+                    {customTracksCount > 0
+                      ? `${customTracksCount} Custom`
+                      : "Default"}{" "}
+                    • Auto-cleanup
                   </div>
                 </div>
               </Card>
@@ -414,7 +771,7 @@ export function BackgroundMusic() {
             variant="ghost"
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`w-14 h-14 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 ${
+            className={`w-14 h-14 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 cursor-pointer ${
               hasError
                 ? "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800"
                 : isLoading

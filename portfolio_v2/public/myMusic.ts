@@ -1,12 +1,16 @@
-interface Track {
+export interface Track {
   id: string;
   title: string;
   artist: string;
   url: string;
   duration: number;
+  scrollSpeed?: number;
+  isCustom?: boolean;
+  file?: File;
+  objectUrl?: string;
 }
 
-export const playlist: Track[] = [
+export const defaultPlaylist: Track[] = [
   {
     id: "1",
     title: "Ada - Not Alone",

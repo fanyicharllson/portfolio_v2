@@ -66,11 +66,14 @@ export function GitHubStats({ username }: GitHubStatsProps) {
                 Failed to load GitHub stats
               </h3>
               <p className="text-slate-400 mb-4">
-                {error instanceof Error ? error.message : "An error occurred"}
+                {error instanceof Error
+                  ? error.message +
+                    "! Please check your network connection or Try Again!"
+                  : "An error occurred"}
               </p>
               <button
                 onClick={() => refetch()}
-                className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
+                className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors cursor-pointer"
               >
                 Try Again
               </button>
