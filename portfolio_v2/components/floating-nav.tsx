@@ -1,30 +1,31 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Sparkles } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, Sparkles } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { useMobile } from "@/hooks/use-mobile"
+import { Button } from "@/components/ui/button";
+import { useMobile } from "@/hooks/use-mobile";
+import { ResumeButton } from "./ResumeButton";
 
 export function FloatingNav() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const isMobile = useMobile()
+  const [isVisible, setIsVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useMobile();
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
-        setIsVisible(true)
+        setIsVisible(true);
       } else {
-        setIsVisible(false)
+        setIsVisible(false);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { name: "About", href: "#about" },
@@ -32,18 +33,18 @@ export function FloatingNav() {
     { name: "Projects", href: "#projects" },
     { name: "Experience", href: "#experience" },
     { name: "Contact", href: "#contact" },
-  ]
+  ];
 
   const handleNavClick = (href: string) => {
     if (isMobile) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
     // Smooth scroll to section
-    const element = document.querySelector(href)
+    const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
 
   return (
     <>
@@ -77,19 +78,31 @@ export function FloatingNav() {
                 <motion.div
                   className="absolute inset-0 rounded-3xl"
                   style={{
-                    background: "conic-gradient(from 0deg, transparent, #06b6d4, transparent, #0ea5e9, transparent)",
+                    background:
+                      "conic-gradient(from 0deg, transparent, #06b6d4, transparent, #0ea5e9, transparent)",
                   }}
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                  transition={{
+                    duration: 8,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "linear",
+                  }}
                 />
                 <div className="absolute inset-[1px] bg-slate-900/90 backdrop-blur-2xl rounded-3xl" />
 
                 {isMobile ? (
                   <div className="relative px-6 py-4 flex items-center justify-between min-w-[280px]">
-                    <Link href="/" className="font-bold text-xl flex items-center gap-2">
+                    <Link
+                      href="/"
+                      className="font-bold text-xl flex items-center gap-2"
+                    >
                       <motion.div
                         animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                        transition={{
+                          duration: 4,
+                          repeat: Number.POSITIVE_INFINITY,
+                          ease: "linear",
+                        }}
                       >
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
@@ -135,10 +148,17 @@ export function FloatingNav() {
                   </div>
                 ) : (
                   <div className="relative px-8 py-4 flex items-center justify-between">
-                    <Link href="/" className="font-bold text-xl flex items-center gap-2 mr-8">
+                    <Link
+                      href="/"
+                      className="font-bold text-xl flex items-center gap-2 mr-8"
+                    >
                       <motion.div
                         animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                        transition={{
+                          duration: 4,
+                          repeat: Number.POSITIVE_INFINITY,
+                          ease: "linear",
+                        }}
                       >
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
@@ -179,16 +199,12 @@ export function FloatingNav() {
                         transition={{ delay: 0.6, duration: 0.3 }}
                         className="ml-4"
                       >
-                        <Button
+                        <ResumeButton
+                          fileName="Fanyi_Charllson_Resume.pdf"
+                          variant="gradient"
                           size="sm"
-                          className="relative overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-6 py-2 text-sm group cursor-pointer"
-                        >
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100"
-                            transition={{ duration: 0.3 }}
-                          />
-                          <span className="relative z-10">Resume</span>
-                        </Button>
+                          showIcon={true}
+                        />
                       </motion.div>
                     </div>
                   </div>
@@ -251,12 +267,18 @@ export function FloatingNav() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 30 }}
-                  transition={{ delay: navItems.length * 0.1 + 0.2, duration: 0.3 }}
+                  transition={{
+                    delay: navItems.length * 0.1 + 0.2,
+                    duration: 0.3,
+                  }}
                   className="pt-8"
                 >
-                  <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 border-0 rounded-2xl font-semibold px-8 py-4 text-lg cursor-pointer">
-                    Resume
-                  </Button>
+                  <ResumeButton
+                    fileName="Fanyi_Charllson_Resume.pdf"
+                    variant="gradient"
+                    size="sm"
+                    showIcon={true}
+                  />
                 </motion.div>
               </motion.div>
             </div>
@@ -264,5 +286,5 @@ export function FloatingNav() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }

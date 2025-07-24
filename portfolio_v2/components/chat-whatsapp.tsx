@@ -23,6 +23,7 @@ export default function MessageMeOnWhatsApp() {
         <Button
           variant="ghost"
           size="icon"
+          title="Message me on WhatsApp"
           className="rounded-2xl bg-slate-800/60 backdrop-blur-sm border border-slate-600/50 hover:bg-green-500 text-slate-400 hover:text-white hover:border-green-400/50 w-10 h-10 sm:w-12 sm:h-12"
         >
           <svg

@@ -770,6 +770,8 @@ export function BackgroundMusic() {
           <Button
             variant="ghost"
             size="icon"
+            title="Play Music"
+            aria-label="Toggle Music Player"
             onClick={() => setIsExpanded(!isExpanded)}
             className={`w-14 h-14 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 cursor-pointer ${
               hasError

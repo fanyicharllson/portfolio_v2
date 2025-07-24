@@ -1,8 +1,8 @@
 import React from "react";
 import { GlassmorphicCard } from "../glassmorphic-card";
-import { Button } from "../ui/button";
 import { SectionHeading } from "../section-heading";
 import Image from "next/image";
+import { ResumeButton } from "../ResumeButton";
 
 export default function About() {
   return (
@@ -104,9 +104,9 @@ export default function About() {
                 </div>
 
                 <div className="mt-8 sm:mt-10">
-                  <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-xl">
-                    Download Resume
-                  </Button>
+                  <ResumeButton variant="gradient" size="lg" showIcon={true} className="text-sm">
+                    Get My Resume
+                  </ResumeButton>
                 </div>
               </GlassmorphicCard>
             </div>

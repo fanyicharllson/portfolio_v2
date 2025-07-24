@@ -249,6 +249,8 @@ export default function HeroSection({
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={social.label}
+                      title={social.label}
                       className={`rounded-2xl bg-slate-800/60 backdrop-blur-md border border-slate-600/50 text-slate-300 hover:text-white transition-all duration-300 hover:border-transparent ${social.color} w-14 h-14 sm:w-16 sm:h-16 relative overflow-hidden group`}
                     >
                       <motion.div
