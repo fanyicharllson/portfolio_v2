@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Github } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,13 @@ export function ProjectCard({
   repoUrl,
 }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const maxLength = 180;
+  const isLong = description.length > maxLength;
+  const displayText = isExpanded
+    ? description
+    : `${description.substring(0, maxLength)}...`;
 
   return (
     <motion.div
@@ -60,7 +67,37 @@ export function ProjectCard({
 
           <div className="p-6 flex-grow">
             <h3 className="text-xl font-bold mb-2">{title}</h3>
-            <p className="text-zinc-400 mb-4">{description}</p>
+
+            {/* discription  */}
+            <motion.div
+              initial={false}
+              animate={{
+                height: isExpanded ? "auto" : "60px",
+              }}
+              transition={{
+                duration: 0.3,
+                ease: "easeInOut",
+              }}
+              className="overflow-hidden mb-4"
+            >
+              <p className="text-zinc-400 leading-relaxed">{displayText}</p>
+            </motion.div>
+
+            {/* Read More / Show Less Button */}
+            {isLong && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm font-semibold transition-colors mb-4 group"
+              >
+                <span>{isExpanded ? "Show less" : "Read more"}</span>
+                <motion.div
+                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+                </motion.div>
+              </button>
+            )}
 
             <div className="flex flex-wrap gap-2 mb-6">
               {tags.map((tag, index) => (

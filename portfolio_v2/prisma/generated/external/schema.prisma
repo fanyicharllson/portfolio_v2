@@ -1,0 +1,47 @@
+// prisma/external.prisma
+// External database schema
+
+generator externalClient {
+  provider = "prisma-client-js"
+  output   = "./generated/external"
+}
+
+datasource externalDb {
+  provider = "postgresql"
+  url      = env("EXTERNAL_DATABASE_URL")
+}
+
+model Software {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  version     String?
+  platform    String[]
+  price       Float
+  imageUrl    String
+  downloadUrl String
+  featured    Boolean  @default(false)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @externalDb.Timestamp(0)
+  updatedAt   DateTime @updatedAt @externalDb.Timestamp(0)
+  webUrl      String?
+  tags        String[]
+  repoUrl     String?
+  // REMOVED: @@map("software") - not needed, model name already matches table name
+
+  @@index([categoryId])
+  @@index([featured])
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  software  Software[]
+  createdAt DateTime   @externalDb.Timestamp(0)
+  updatedAt DateTime   @updatedAt @externalDb.Timestamp(0)
+
+  // REMOVED: @@map("categories") - not needed, model name already matches table name
+}

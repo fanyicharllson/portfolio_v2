@@ -126,7 +126,7 @@ export function ContactForm() {
                 >
                   <CheckCircle2 className="w-6 h-6 text-white" />
                   <span>
-                    Thank you for your message! I will get back to you soon.
+                    Thankyou for contacting Charllson! 😊 I will get back to you soon
                   </span>
                 </motion.div>
               )}

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Charllson-Portfolio",
+  title: "FANYI CHARLLSON FANYI - SOFTWARE ARCHITECH",
   description:
     "The personal portfolio of Fanyi Charllson, showcasing projects, skills, and experience in web development.",
 };
