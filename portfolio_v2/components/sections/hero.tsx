@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import React from "react";
-import { Button } from "../ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Code,
@@ -16,6 +16,8 @@ import { CreativeHero } from "../creative-hero";
 import dynamic from "next/dynamic";
 import TitleTopBar from "../title-top-bar";
 import { useRouter } from "next/navigation";
+import { taglines } from "@/lib/taglines";
+
 const ClientOnlyParticles = dynamic(() => import("./client-only-particles"), {
   ssr: false,
 });
@@ -45,6 +47,17 @@ export default function HeroSection({
   particles,
 }: HeroSectionProps) {
   const router = useRouter();
+
+  const [currentTaglineIndex, setCurrentTaglineIndex] = useState(0);
+
+  // Auto-rotate taglines every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTaglineIndex((prevIndex) => (prevIndex + 1) % taglines.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -85,37 +98,90 @@ export default function HeroSection({
               transition={{ delay: 0.8, duration: 1.2 }}
             >
               <span className="block text-slate-200 mb-2">Creating</span>
-              <motion.span
-                className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400 relative"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
-                }}
-                style={{
-                  backgroundSize: "200% 200%",
-                }}
-              >
-                Digital Magic
-                <motion.div
-                  className="absolute -top-2 -right-2"
-                  animate={{
-                    rotate: [0, 360],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <Star className="h-6 w-6 text-yellow-400 fill-current" />
-                </motion.div>
-              </motion.span>
+
+              {/* Smooth tagline transition wrapper */}
+              <div className="relative inline-block min-h-[1em] min-w-[600px]">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentTaglineIndex}
+                    className="block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400 relative"
+                    initial={{
+                      opacity: 0,
+                      x: 100,
+                      filter: "blur(10px)",
+                      scale: 0.9,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      filter: "blur(0px)",
+                      scale: 1,
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    exit={{
+                      opacity: 0,
+                      x: -100,
+                      filter: "blur(10px)",
+                      scale: 0.9,
+                      position: "absolute",
+                    }}
+                    transition={{
+                      opacity: { duration: 0.5, ease: "easeInOut" },
+                      x: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] },
+                      filter: { duration: 0.5 },
+                      scale: { duration: 0.5, ease: "easeOut" },
+                      backgroundPosition: {
+                        duration: 28,
+                        repeat: Infinity,
+                        ease: "linear",
+                      },
+                    }}
+                    style={{
+                      backgroundSize: "200% 200%",
+                    }}
+                  >
+                    {taglines[currentTaglineIndex]}
+                    <motion.div
+                      className="absolute -top-2 -right-2"
+                      animate={{
+                        rotate: [0, 360],
+                        scale: [1, 1.2, 1],
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <Star className="h-6 w-6 text-yellow-400 fill-current drop-shadow-lg" />
+                    </motion.div>
+                  </motion.span>
+                </AnimatePresence>
+              </div>
             </motion.h1>
+
+            {/* Tagline rotation indicator */}
+            <motion.div
+              className="flex justify-center space-x-2 mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.5 }}
+            >
+              {taglines.map((_, index) => (
+                <motion.div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentTaglineIndex
+                      ? "bg-cyan-400 shadow-lg shadow-cyan-400/50"
+                      : "bg-slate-600"
+                  }`}
+                  animate={{
+                    scale: index === currentTaglineIndex ? 1.2 : 1,
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              ))}
+            </motion.div>
 
             <motion.p
               className="text-lg sm:text-xl text-slate-300 max-w-[580px] leading-relaxed font-medium"
@@ -150,7 +216,7 @@ export default function HeroSection({
                     animate={{ x: [0, 5, 0] }}
                     transition={{
                       duration: 1.5,
-                      repeat: Number.POSITIVE_INFINITY,
+                      repeat: Infinity,
                     }}
                   >
                     <ArrowRight className="h-5 w-5" />
@@ -260,7 +326,7 @@ export default function HeroSection({
             animate={{ y: [0, -10, 0] }}
             transition={{
               duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
+              repeat: Infinity,
               ease: "easeInOut",
             }}
             whileHover={{ scale: 1.1 }}
@@ -278,7 +344,7 @@ export default function HeroSection({
               }}
               transition={{
                 duration: 3,
-                repeat: Number.POSITIVE_INFINITY,
+                repeat: Infinity,
                 ease: "easeInOut",
               }}
             />
@@ -286,7 +352,7 @@ export default function HeroSection({
           <motion.p
             className="text-xs text-slate-400 mt-3 text-center font-medium"
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
             Discover Magic
           </motion.p>
