@@ -107,7 +107,7 @@ export function FloatingNav() {
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-                        Fanyi
+                        FANYI
                       </span>
                       <span className="text-white">CF</span>
                     </Link>
@@ -163,7 +163,7 @@ export function FloatingNav() {
                         <Sparkles className="h-5 w-5 text-cyan-400" />
                       </motion.div>
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-                        Fanyi
+                        FANYI
                       </span>
                       <span className="text-white">CF</span>
                     </Link>

@@ -42,7 +42,7 @@ export default function Footer() {
               <span className="text-slate-200">CF</span>
             </Link>
             <p className="text-sm text-slate-500 mt-2 sm:mt-3 font-medium">
-              © {new Date().getFullYear()} Fanyi Charllson Fanyi. All rights
+              © {new Date().getFullYear()} FANYI CHARLLSON FANYI. All rights
               reserved.
             </p>
           </div>

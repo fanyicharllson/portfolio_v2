@@ -118,7 +118,7 @@ export default function ImageTitleBanner() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
               >
-                I&apos;m{" "}
+                I&apos;M{" "}
                 <motion.span
                   className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent font-extrabold"
                   animate={{
@@ -130,7 +130,7 @@ export default function ImageTitleBanner() {
                     ease: "linear",
                   }}
                 >
-                  Fanyi Charllson
+                  FANYI CHARLLSON
                 </motion.span>{" "}
                 ✨
               </motion.span>

@@ -19,8 +19,9 @@ import BackgroundEffect from "@/components/sections/backgroundEffect";
 import Projects from "@/components/sections/filter_sections_projects/projects";
 import Skills from "@/components/sections/skill_slider/skills";
 import MessageMeOnWhatsApp from "@/components/chat-whatsapp";
-import { VoiceAssistant } from "@/components/ai/voice-assistance";
 import { BackgroundMusic } from "@/components/music/background-music";
+import MarqueeText from "@/components/marquee-text";
+import { VoiceAssistant } from "@/components/VoiceAssistanceAI/VoiceAssistant";
 
 export default function Portfolio() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -73,6 +74,9 @@ export default function Portfolio() {
         isLoaded={isLoaded}
         particles={particles}
       />
+      {/* Moving text */}
+      <MarqueeText />
+      
       {/* Enhanced Stats Section */}
       <Stats />
       {/* Interactive Terminal Section */}
@@ -98,7 +102,6 @@ export default function Portfolio() {
       <VoiceAssistant
         onCommand={(command) => {
           console.log("Voice command received:", command);
-          // You can add additional command handling here
         }}
       />
     </div>

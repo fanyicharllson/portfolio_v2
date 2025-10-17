@@ -242,7 +242,11 @@ export default function Projects() {
             <RefreshCw
               className={`h-4 w-4 ${isFetchingProjects ? "animate-spin" : ""}`}
             />
-            <span className="text-xs">Reload Charllson&apos;s projects</span>
+            <span className="text-xs">
+              {isFetchingProjects || isFetchingCounts
+                ? "Reloading Charllson's projects..."
+                : "Reload Charllson's projects"}
+            </span>
           </button>
         </div>
 

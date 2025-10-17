@@ -8,13 +8,14 @@ import {
   Globe,
   Linkedin,
   Mail,
-  Sparkles,
   Star,
   Twitter,
 } from "lucide-react";
 import Link from "next/link";
 import { CreativeHero } from "../creative-hero";
 import dynamic from "next/dynamic";
+import TitleTopBar from "../title-top-bar";
+import { useRouter } from "next/navigation";
 const ClientOnlyParticles = dynamic(() => import("./client-only-particles"), {
   ssr: false,
 });
@@ -43,6 +44,8 @@ export default function HeroSection({
   isLoaded,
   particles,
 }: HeroSectionProps) {
+  const router = useRouter();
+
   return (
     <>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
@@ -60,50 +63,19 @@ export default function HeroSection({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-
             {/* Title in top browser */}
-            <div className="inline-block">
-              <motion.div
-                className="relative px-4 sm:px-6 py-3 sm:py-3 text-sm font-semibold rounded-3xl bg-slate-800/60 backdrop-blur-2xl border border-cyan-400/40 mb-6 sm:mb-8 overflow-hidden"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-emerald-500/10"
-                  animate={{
-                    x: ["-100%", "100%"],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  }}
-                />
-                <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-                  <motion.div
-                    className="w-3 h-3 bg-emerald-400 rounded-full"
-                    animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [1, 0.5, 1],
-                      boxShadow: [
-                        "0 0 0 0 rgba(16, 185, 129, 0.7)",
-                        "0 0 0 10px rgba(16, 185, 129, 0)",
-                        "0 0 0 0 rgba(16, 185, 129, 0.7)",
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                    }}
-                  />
-                  <span className="text-xs sm:text-sm flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-cyan-400" />
-                    Builder & CTO-Minded Software Architect
-                  </span>
-                </span>
-              </motion.div>
+            <div className="flex items-center justify-between w-full min-w-0">
+              <div className="flex-shrink-0">
+                <TitleTopBar text="Builder & CTO-Minded Software Architect" />
+              </div>
+            </div>
+
+            {/* Mobile App component positioned at extreme right */}
+            <div className="fixed top-0 right-30 z-50">
+              <TitleTopBar
+                text="Get Charllson's Mobile App Now 😎"
+                onPress={() => router.push("/download-charllson-app")}
+              />
             </div>
 
             <motion.h1

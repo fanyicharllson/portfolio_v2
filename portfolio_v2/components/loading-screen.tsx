@@ -82,7 +82,7 @@ export function LoadingScreen() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        Loading amazing portfolio...
+        Loading Charllson&apos;s amazing portfolio...
       </motion.p>
     </motion.div>
   );
