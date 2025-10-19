@@ -309,7 +309,7 @@ export function CreativeHero() {
                 transition={{ duration: 0.4 }}
               >
                 <Image
-                  src="/me.png"
+                  src="/cto.png"
                   alt="Profile"
                   className="w-full h-full object-cover"
                   width={500}
