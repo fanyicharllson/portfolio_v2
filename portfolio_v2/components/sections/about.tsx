@@ -24,7 +24,7 @@ export default function About() {
               <div className="absolute -inset-4 sm:-inset-6 rounded-2xl bg-gradient-to-r from-cyan-500/15 to-blue-500/15 blur-2xl opacity-80"></div>
               <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-700/50 shadow-2xl">
                 <Image
-                  src="/charllson_2.jpg"
+                  src="/cto.jpeg"
                   alt="Fanyi Charllson"
                   className="w-full h-full object-cover object-center"
                   width={500}
