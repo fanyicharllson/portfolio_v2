@@ -275,6 +275,23 @@
   will-change: transform, opacity;
 }
 
+/* Premium "AI is speaking" equalizer bars - each bar gets its own
+   animation-delay inline so one keyframe drives the whole set. */
+@keyframes eq-bar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.animate-eq-bar {
+  animation: eq-bar ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-pulse-scale,
   .animate-rotate-cw,
@@ -282,6 +299,7 @@
   .animate-sweep-linear,
   .animate-bg-pan,
   .animate-ping-soft,
+  .animate-eq-bar,
   .animate-blob,
   .animate-float,
   .animate-glow {

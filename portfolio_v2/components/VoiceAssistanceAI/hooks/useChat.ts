@@ -44,6 +44,7 @@ export function useChat() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSuccess: (data, variables) => {
       const aiMessage: Message = {
+        id: crypto.randomUUID(),
         role: "assistant",
         content: data.response,
         timestamp: new Date(),
@@ -52,6 +53,7 @@ export function useChat() {
     },
     onError: () => {
       const errorMessage: Message = {
+        id: crypto.randomUUID(),
         role: "assistant",
         content:
           "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
@@ -67,6 +69,7 @@ export function useChat() {
 
       // Add user message
       const userMessage: Message = {
+        id: crypto.randomUUID(),
         role: "user",
         content: message.trim(),
         timestamp: new Date(),

@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import {
   Mic,
   MicOff,
@@ -12,13 +15,47 @@ import {
   Sparkles,
   MessageCircle,
   Loader2,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react";
+import type { Message } from "@/types/chat";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+const markdownComponents = {
+  p: ({ children }: { children?: ReactNode }) => (
+    <p className="mb-2 last:mb-0">{children}</p>
+  ),
+  strong: ({ children }: { children?: ReactNode }) => (
+    <strong className="font-semibold text-slate-100">{children}</strong>
+  ),
+  em: ({ children }: { children?: ReactNode }) => (
+    <em className="italic">{children}</em>
+  ),
+  ul: ({ children }: { children?: ReactNode }) => (
+    <ul className="list-disc list-inside mb-2 space-y-1 last:mb-0">
+      {children}
+    </ul>
+  ),
+  ol: ({ children }: { children?: ReactNode }) => (
+    <ol className="list-decimal list-inside mb-2 space-y-1 last:mb-0">
+      {children}
+    </ol>
+  ),
+  code: ({ children }: { children?: ReactNode }) => (
+    <code className="px-1 py-0.5 rounded bg-slate-900/60 text-cyan-300 text-xs">
+      {children}
+    </code>
+  ),
+  a: ({ children, href }: { children?: ReactNode; href?: string }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-purple-400 underline hover:text-purple-300"
+    >
+      {children}
+    </a>
+  ),
+};
 
 interface ChatModalProps {
   isOpen: boolean;
@@ -53,11 +90,51 @@ export function ChatModal({
   onSpeak,
 }: ChatModalProps) {
   const [inputText, setInputText] = useState("");
+  const [feedback, setFeedback] = useState<Record<string, "up" | "down">>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading, currentTranscript]);
+
+  const handleFeedback = (
+    message: Message,
+    questionText: string,
+    rating: "up" | "down"
+  ) => {
+    const current = feedback[message.id];
+    const next = current === rating ? undefined : rating;
+
+    // Optimistic, instant UI update - the request happens in the background.
+    setFeedback((prev) => {
+      const updated = { ...prev };
+      if (next) {
+        updated[message.id] = next;
+      } else {
+        delete updated[message.id];
+      }
+      return updated;
+    });
+
+    if (next) {
+      fetch("/api/chat/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messageId: message.id,
+          question: questionText,
+          response: message.content,
+          rating: next,
+        }),
+      }).catch((err) => console.error("Failed to save feedback:", err));
+    } else {
+      fetch("/api/chat/feedback", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId: message.id }),
+      }).catch((err) => console.error("Failed to remove feedback:", err));
+    }
+  };
 
   const handleSendMessage = () => {
     if (inputText.trim() && !isLoading) {
@@ -113,7 +190,7 @@ export function ChatModal({
                   <h3 className="font-bold text-lg">
                     Charllson&apos;s AI Assistant
                   </h3>
-                  <p className="text-xs text-slate-400">Powered by Gemini AI</p>
+                  <p className="text-xs text-slate-400">Powered by Groq</p>
                 </div>
               </div>
 
@@ -142,79 +219,57 @@ export function ChatModal({
             {(isListening || isSpeaking || isLoading) && (
               <div className="px-4 pt-3">
                 <div
-                  className={`flex items-center gap-3 p-3 rounded-2xl ${
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-full backdrop-blur-sm border ${
                     isListening
-                      ? "bg-red-500/20 border border-red-500/30"
+                      ? "bg-red-500/10 border-red-500/30"
                       : isSpeaking
-                      ? "bg-green-500/20 border border-green-500/30"
-                      : "bg-yellow-500/20 border border-yellow-500/30"
+                      ? "bg-gradient-to-r from-purple-500/15 to-pink-500/15 border-purple-500/30"
+                      : "bg-yellow-500/10 border-yellow-500/30"
                   }`}
                 >
-                  <div className="relative flex items-center">
-                    <div
-                      className={`w-3 h-3 rounded-full ${
-                        isListening
-                          ? "bg-red-500"
-                          : isSpeaking
-                          ? "bg-green-500"
-                          : "bg-yellow-500"
-                      } animate-pulse`}
-                    />
-                    {isListening && (
-                      <>
-                        <motion.div
-                          className="absolute w-3 h-3 rounded-full bg-red-500"
-                          animate={{ scale: [1, 2, 1], opacity: [0.8, 0, 0.8] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        />
-                        <motion.div
-                          className="absolute w-3 h-3 rounded-full bg-red-500"
-                          animate={{
-                            scale: [1, 2.5, 1],
-                            opacity: [0.6, 0, 0.6],
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            delay: 0.3,
+                  {isSpeaking ? (
+                    <div className="flex items-center justify-center gap-[3px] w-5 h-4">
+                      {[0, 1, 2, 3].map((bar) => (
+                        <span
+                          key={bar}
+                          className="w-[3px] h-full rounded-full bg-gradient-to-t from-purple-400 to-pink-400 animate-eq-bar"
+                          style={{
+                            animationDuration: `${0.7 + bar * 0.15}s`,
+                            animationDelay: `${bar * 0.1}s`,
                           }}
                         />
-                      </>
-                    )}
-                    {isSpeaking && (
-                      <>
-                        <motion.div
-                          className="absolute w-2 h-4 bg-green-500/60 rounded-full ml-4"
-                          animate={{ scaleY: [1, 1.5, 0.8, 1.5, 1] }}
-                          transition={{ duration: 0.8, repeat: Infinity }}
-                        />
-                        <motion.div
-                          className="absolute w-2 h-4 bg-green-500/40 rounded-full ml-7"
-                          animate={{ scaleY: [1, 0.8, 1.5, 1, 0.8] }}
-                          transition={{
-                            duration: 0.8,
-                            repeat: Infinity,
-                            delay: 0.2,
-                          }}
-                        />
-                        <motion.div
-                          className="absolute w-2 h-4 bg-green-500/60 rounded-full ml-10"
-                          animate={{ scaleY: [1, 1.5, 1, 0.8, 1.5] }}
-                          transition={{
-                            duration: 0.8,
-                            repeat: Infinity,
-                            delay: 0.4,
-                          }}
-                        />
-                      </>
-                    )}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="relative flex items-center justify-center w-5 h-4">
+                      <div
+                        className={`w-2.5 h-2.5 rounded-full ${
+                          isListening ? "bg-red-500" : "bg-yellow-500"
+                        } animate-pulse`}
+                      />
+                      {isListening && (
+                        <>
+                          <span
+                            className="absolute w-2.5 h-2.5 rounded-full bg-red-500 animate-ping-soft"
+                            style={{ animationDuration: "1.5s" }}
+                          />
+                          <span
+                            className="absolute w-2.5 h-2.5 rounded-full bg-red-500 animate-ping-soft"
+                            style={{
+                              animationDuration: "1.5s",
+                              animationDelay: "0.3s",
+                            }}
+                          />
+                        </>
+                      )}
+                    </div>
+                  )}
                   <span className="text-sm font-medium flex-1">
                     {isListening
-                      ? "🎤 Listening to your voice..."
+                      ? "Listening to your voice..."
                       : isSpeaking
-                      ? "🔊 AI is speaking..."
-                      : "⏳ AI is thinking..."}
+                      ? "AI is speaking..."
+                      : "AI is thinking..."}
                   </span>
                 </div>
               </div>
@@ -250,7 +305,7 @@ export function ChatModal({
 
               {messages.map((message, index) => (
                 <motion.div
-                  key={index}
+                  key={message.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${
@@ -264,9 +319,20 @@ export function ChatModal({
                         : "bg-slate-800/50 border border-slate-700/50 text-slate-200"
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">
-                      {message.content}
-                    </p>
+                    {message.role === "assistant" ? (
+                      <div className="text-sm">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm, remarkBreaks]}
+                          components={markdownComponents}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    )}
                     <div className="flex items-center justify-between gap-2 mt-1">
                       <p
                         className={`text-xs ${
@@ -280,16 +346,68 @@ export function ChatModal({
                           minute: "2-digit",
                         })}
                       </p>
-                      {message.role === "assistant" && audioEnabled && (
-                        <button
-                          onClick={() => onSpeak(message.content)}
-                          disabled={isSpeaking}
-                          className="text-xs text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 disabled:opacity-50 cursor-pointer"
-                          title="Read this message"
-                        >
-                          <Volume2 className="h-3 w-3" />
-                          {isSpeaking ? "Reading..." : "Read"}
-                        </button>
+                      {message.role === "assistant" && (
+                        <div className="flex items-center gap-2">
+                          {audioEnabled && (
+                            <button
+                              onClick={() => onSpeak(message.content)}
+                              disabled={isSpeaking}
+                              className="text-xs text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 disabled:opacity-50 cursor-pointer"
+                              title="Read this message"
+                            >
+                              <Volume2 className="h-3 w-3" />
+                              {isSpeaking ? "Reading..." : "Read"}
+                            </button>
+                          )}
+                          <button
+                            onClick={() =>
+                              handleFeedback(
+                                message,
+                                messages[index - 1]?.content ?? "",
+                                "up"
+                              )
+                            }
+                            className={`transition-colors cursor-pointer ${
+                              feedback[message.id] === "up"
+                                ? "text-emerald-400"
+                                : "text-slate-500 hover:text-emerald-400"
+                            }`}
+                            title="Good response"
+                          >
+                            <ThumbsUp
+                              className="h-3.5 w-3.5"
+                              fill={
+                                feedback[message.id] === "up"
+                                  ? "currentColor"
+                                  : "none"
+                              }
+                            />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleFeedback(
+                                message,
+                                messages[index - 1]?.content ?? "",
+                                "down"
+                              )
+                            }
+                            className={`transition-colors cursor-pointer ${
+                              feedback[message.id] === "down"
+                                ? "text-red-400"
+                                : "text-slate-500 hover:text-red-400"
+                            }`}
+                            title="Not helpful"
+                          >
+                            <ThumbsDown
+                              className="h-3.5 w-3.5"
+                              fill={
+                                feedback[message.id] === "down"
+                                  ? "currentColor"
+                                  : "none"
+                              }
+                            />
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

@@ -14,7 +14,7 @@ CORE SKILLS:
 - Backend: Node.js, Express, Spring Boot, Python, FastAPI
 - Databases: PostgreSQL, MongoDB, SQLite, Firebase
 - DevOps & Tools: Docker, Git, AWS, Vercel, Redis, BullMQ
-- AI/ML: OpenAI API, Google Gemini, TensorFlow basics\
+- AI/ML: OpenAI API, Groq, TensorFlow basics
 - Languages: English
 - Best Programming Language: Java
 - Programming Languages: Java, Python, Go

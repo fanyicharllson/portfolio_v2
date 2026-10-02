@@ -21,3 +21,13 @@ model Contact {
   message   String
     createdAt DateTime
   }
+
+model ChatFeedback {
+  id         Int      @id @default(autoincrement())
+  messageId  String   @unique
+  question   String
+  response   String
+  rating     String // "up" | "down"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

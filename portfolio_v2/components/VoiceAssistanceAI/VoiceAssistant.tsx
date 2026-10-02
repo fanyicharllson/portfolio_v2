@@ -33,6 +33,14 @@ export function VoiceAssistant({ onCommand }: VoiceAssistantProps) {
   const { isSpeaking, speak, cancel, audioEnabled, toggleAudio } =
     useSpeechSynthesis();
 
+  // Never let the mic stay open while the AI is talking through the
+  // speakers - otherwise it can pick up the AI's own voice as new input.
+  useEffect(() => {
+    if (isSpeaking && isListening) {
+      stopListening();
+    }
+  }, [isSpeaking, isListening, stopListening]);
+
   // Auto-speak AI responses when they arrive (only once per message)
   useEffect(() => {
     if (messages.length > 0 && audioEnabled) {
