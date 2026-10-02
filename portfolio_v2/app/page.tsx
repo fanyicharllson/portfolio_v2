@@ -46,10 +46,12 @@ export default function Portfolio() {
       }))
     );
 
-    // Set loaded after a short delay to ensure critical components are rendered
+    // This used to be a flat 2s delay regardless of actual readiness,
+    // stacking on top of the loading screen's own delay. A frame is enough
+    // for the initial layout to settle before fading particles in.
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 2000);
+    }, 50);
 
     return () => clearTimeout(timer);
   }, []);

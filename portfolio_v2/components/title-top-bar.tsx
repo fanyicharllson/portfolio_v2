@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
@@ -18,34 +19,29 @@ function TitleTopBar({ text, onPress }: TitleTopBarProps) {
         transition={{ delay: 0.5, duration: 0.8 }}
         onClick={onPress}
       >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-emerald-500/10"
-          animate={{
-            x: ["-100%", "100%"],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-emerald-500/10 animate-sweep-linear"
+          style={
+            {
+              "--sweep-from": "-100%",
+              "--sweep-to": "100%",
+              animationDuration: "3s",
+            } as CSSProperties
+          }
         />
         <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-          <motion.div
-            className="w-3 h-3 bg-emerald-400 rounded-full"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [1, 0.5, 1],
-              boxShadow: [
-                "0 0 0 0 rgba(16, 185, 129, 0.7)",
-                "0 0 0 10px rgba(16, 185, 129, 0)",
-                "0 0 0 0 rgba(16, 185, 129, 0.7)",
-              ],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
+          <div
+            className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse-scale"
+            style={
+              {
+                "--pulse-from": 1,
+                "--pulse-to": 1.5,
+                "--opacity-from": 1,
+                "--opacity-to": 0.5,
+                animationDuration: "2s",
+                boxShadow: "0 0 0 4px rgba(16, 185, 129, 0.25)",
+              } as CSSProperties
+            }
           />
           <span className="text-xs sm:text-sm flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-cyan-400" />

@@ -8,19 +8,43 @@ export function LoadingScreen() {
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    // Simulate loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setIsComplete(true), 500);
-          return 100;
-        }
-        return prev + 5;
-      });
+    // Previously this was a fake setInterval that always took a fixed
+    // 2.5s no matter how fast (or slow) the page actually was. Instead,
+    // track real readiness: creep the bar up while waiting, jump to 100%
+    // as soon as the page has actually finished loading, and fall back to
+    // a hard cap so a slow network can't block the screen forever.
+    if (document.readyState === "complete") {
+      setProgress(100);
+      const doneTimer = setTimeout(() => setIsComplete(true), 200);
+      return () => clearTimeout(doneTimer);
+    }
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      clearInterval(creepInterval);
+      clearTimeout(capTimer);
+      setProgress(100);
+      setTimeout(() => setIsComplete(true), 300);
+    };
+
+    // Creep toward 90% while we wait, so it still reads as "loading"
+    // instead of a frozen 0%.
+    const creepInterval = setInterval(() => {
+      setProgress((prev) => (prev < 90 ? prev + (90 - prev) * 0.15 : prev));
     }, 100);
 
-    return () => clearInterval(interval);
+    // Hard cap so a slow connection never blocks the page indefinitely.
+    const capTimer = setTimeout(finish, 2500);
+
+    window.addEventListener("load", finish);
+
+    return () => {
+      clearInterval(creepInterval);
+      clearTimeout(capTimer);
+      window.removeEventListener("load", finish);
+    };
   }, []);
 
   if (isComplete) return null;
@@ -59,7 +83,7 @@ export function LoadingScreen() {
             }}
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xl font-bold text-cyan-400">{progress}%</span>
+            <span className="text-xl font-bold text-cyan-400">{Math.round(progress)}%</span>
           </div>
         </div>
       </motion.div>

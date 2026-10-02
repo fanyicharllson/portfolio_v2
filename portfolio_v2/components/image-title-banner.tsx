@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Code2, Zap, Star } from "lucide-react";
 
@@ -15,82 +16,47 @@ export default function ImageTitleBanner() {
           transition={{ delay: 0.3, duration: 1, type: "spring", bounce: 0.4 }}
           whileHover={{ scale: 1.05, y: -2 }}
         >
-          {/* Animated Background Gradient */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-emerald-500/20 opacity-60"
-            animate={{
-              background: [
-                "linear-gradient(45deg, rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2), rgba(16, 185, 129, 0.2))",
-                "linear-gradient(90deg, rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2), rgba(16, 185, 129, 0.2), rgba(168, 85, 247, 0.2))",
-                "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(16, 185, 129, 0.2), rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2))",
-                "linear-gradient(180deg, rgba(16, 185, 129, 0.2), rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2))",
-              ],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
+          {/* Animated Background Gradient (CSS background-position pan, not color interpolation) */}
+          <div
+            className="absolute inset-0 opacity-60 animate-bg-pan"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2), rgba(16, 185, 129, 0.2), rgba(168, 85, 247, 0.2))",
+              animationDuration: "4s",
             }}
           />
 
           {/* Shimmer Effect */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-            animate={{
-              x: ["-100%", "200%"],
-            }}
-            transition={{
-              duration: 2.5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              repeatDelay: 1,
-            }}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer-sweep"
+            style={{ animationDuration: "3.5s" }}
           />
 
           {/* Content */}
           <div className="relative z-10 flex items-center gap-3 sm:gap-4">
             {/* Animated Status Indicator */}
-            <motion.div
-              className="relative flex items-center justify-center"
-              animate={{
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-              }}
+            <div
+              className="relative flex items-center justify-center animate-rotate-cw"
+              style={{ animationDuration: "8s" }}
             >
-              <motion.div
-                className="w-4 h-4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full shadow-lg"
-                animate={{
-                  scale: [1, 1.3, 1],
-                  boxShadow: [
-                    "0 0 0 0 rgba(16, 185, 129, 0.8)",
-                    "0 0 0 8px rgba(16, 185, 129, 0.1)",
-                    "0 0 0 0 rgba(16, 185, 129, 0.8)",
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
+              <div
+                className="w-4 h-4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full shadow-lg animate-pulse-scale"
+                style={
+                  {
+                    "--pulse-from": 1,
+                    "--pulse-to": 1.3,
+                    "--opacity-from": 1,
+                    "--opacity-to": 1,
+                    animationDuration: "2s",
+                    boxShadow: "0 0 0 4px rgba(16, 185, 129, 0.3)",
+                  } as CSSProperties
+                }
               />
-              <motion.div
-                className="absolute inset-0 w-4 h-4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full"
-                animate={{
-                  scale: [1, 1.8, 1],
-                  opacity: [1, 0, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
+              <div
+                className="absolute inset-0 w-4 h-4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full animate-ping-soft"
+                style={{ animationDuration: "2s", animationDelay: "0.5s" }}
               />
-            </motion.div>
+            </div>
 
             {/* Enhanced Text Content */}
             <div className="flex items-center gap-2 sm:gap-3">
@@ -152,30 +118,30 @@ export default function ImageTitleBanner() {
           </div>
 
           {/* Corner Decorations */}
-          <motion.div
-            className="absolute top-1 right-1 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-60"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.6, 1, 0.6],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
+          <div
+            className="absolute top-1 right-1 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse-scale"
+            style={
+              {
+                "--pulse-from": 1,
+                "--pulse-to": 1.5,
+                "--opacity-from": 0.6,
+                "--opacity-to": 1,
+                animationDuration: "3s",
+              } as CSSProperties
+            }
           />
-          <motion.div
-            className="absolute bottom-1 left-1 w-2 h-2 bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full opacity-60"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.6, 1, 0.6],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: 1.5,
-            }}
+          <div
+            className="absolute bottom-1 left-1 w-2 h-2 bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full animate-pulse-scale"
+            style={
+              {
+                "--pulse-from": 1,
+                "--pulse-to": 1.5,
+                "--opacity-from": 0.6,
+                "--opacity-to": 1,
+                animationDuration: "3s",
+                animationDelay: "1.5s",
+              } as CSSProperties
+            }
           />
         </motion.div>
       </div>

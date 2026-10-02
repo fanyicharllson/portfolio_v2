@@ -242,7 +242,7 @@ export function CreativeHero() {
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute top-8 sm:top-16 left-8 sm:left-16 w-20 sm:w-28 h-20 sm:h-28 border-2 border-cyan-400/30 rounded-2xl"
-          animate={{ rotate: 360 }}
+          animate={isVisible ? { rotate: 360 } : undefined}
           transition={{
             duration: 20,
             repeat: Number.POSITIVE_INFINITY,
@@ -251,7 +251,7 @@ export function CreativeHero() {
         />
         <motion.div
           className="absolute bottom-12 sm:bottom-24 right-6 sm:right-12 w-18 sm:w-24 h-18 sm:h-24 rounded-3xl bg-gradient-to-r from-blue-500/15 to-emerald-500/15"
-          animate={{ y: [-5, 5, -5], rotate: [0, 180, 360] }}
+          animate={isVisible ? { y: [-5, 5, -5], rotate: [0, 180, 360] } : undefined}
           transition={{
             duration: 15,
             repeat: Number.POSITIVE_INFINITY,
@@ -292,7 +292,7 @@ export function CreativeHero() {
             {/* Simplified animated border */}
             <motion.div
               className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-emerald-500 p-1"
-              animate={{ rotate: 360 }}
+              animate={isVisible ? { rotate: 360 } : undefined}
               transition={{
                 duration: 15,
                 repeat: Number.POSITIVE_INFINITY,
@@ -309,7 +309,7 @@ export function CreativeHero() {
                 transition={{ duration: 0.4 }}
               >
                 <Image
-                  src="/cto.jpeg"
+                  src="/cto.png"
                   alt="Profile"
                   className="w-full h-full object-cover"
                   width={500}
@@ -329,10 +329,11 @@ export function CreativeHero() {
                     top: `${30 + i * 20}%`,
                     left: `${20 + i * 25}%`,
                   }}
-                  animate={{
-                    y: [-4, 4, -4],
-                    opacity: [0.4, 0.8, 0.4],
-                  }}
+                  animate={
+                    isVisible
+                      ? { y: [-4, 4, -4], opacity: [0.4, 0.8, 0.4] }
+                      : undefined
+                  }
                   transition={{
                     duration: 3 + i,
                     repeat: Number.POSITIVE_INFINITY,
@@ -352,7 +353,7 @@ export function CreativeHero() {
           >
             <motion.div
               className="w-3 h-3 rounded-full bg-emerald-400"
-              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+              animate={isVisible ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : undefined}
               transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
             />
             <span className="text-xs font-semibold text-cyan-100">
@@ -363,7 +364,7 @@ export function CreativeHero() {
           {/* Simplified tech icons */}
           <motion.div
             className="absolute -top-6 -left-6 w-12 h-12 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white text-lg font-bold shadow-xl"
-            animate={{ y: [-2, 2, -2] }}
+            animate={isVisible ? { y: [-2, 2, -2] } : undefined}
             transition={{
               duration: 4,
               repeat: Number.POSITIVE_INFINITY,
@@ -375,7 +376,7 @@ export function CreativeHero() {
 
           <motion.div
             className="absolute -bottom-4 -right-8 w-14 h-14 rounded-3xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xl font-bold shadow-xl"
-            animate={{ x: [-2, 2, -2] }}
+            animate={isVisible ? { x: [-2, 2, -2] } : undefined}
             transition={{
               duration: 5,
               repeat: Number.POSITIVE_INFINITY,

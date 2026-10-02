@@ -308,7 +308,6 @@ export function InteractiveTerminal() {
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 min-w-0 bg-transparent text-cyan-400 outline-none font-mono placeholder-slate-500 text-xs sm:text-sm"
               placeholder="Type a command... (try 'help')"
-              autoFocus
             />
             <motion.div
               animate={{ opacity: [1, 0, 1] }}

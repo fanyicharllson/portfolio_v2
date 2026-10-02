@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useMobile } from "@/hooks/use-mobile";
@@ -59,33 +60,28 @@ export function FloatingNav() {
           >
             <div className="relative">
               {/* Animated background glow */}
-              <motion.div
-                className="absolute -inset-2 bg-gradient-to-r from-cyan-500/30 via-blue-500/30 to-emerald-500/30 rounded-3xl blur-xl"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                }}
+              <div
+                className="absolute -inset-2 bg-gradient-to-r from-cyan-500/30 via-blue-500/30 to-emerald-500/30 rounded-3xl blur-xl animate-pulse-scale"
+                style={
+                  {
+                    "--pulse-from": 1,
+                    "--pulse-to": 1.05,
+                    "--opacity-from": 0.5,
+                    "--opacity-to": 0.8,
+                    animationDuration: "3s",
+                  } as CSSProperties
+                }
               />
 
               {/* Main navbar container */}
               <div className="relative bg-slate-900/80 backdrop-blur-2xl border border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden">
                 {/* Animated border */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
+                <div
+                  className="absolute inset-0 rounded-3xl animate-rotate-cw"
                   style={{
                     background:
                       "conic-gradient(from 0deg, transparent, #06b6d4, transparent, #0ea5e9, transparent)",
-                  }}
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 8,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
+                    animationDuration: "8s",
                   }}
                 />
                 <div className="absolute inset-[1px] bg-slate-900/90 backdrop-blur-2xl rounded-3xl" />
@@ -96,16 +92,14 @@ export function FloatingNav() {
                       href="/"
                       className="font-bold text-xl flex items-center gap-2"
                     >
-                      <motion.div
-                        animate={{ rotate: [0, 360] }}
-                        transition={{
-                          duration: 4,
-                          repeat: Number.POSITIVE_INFINITY,
-                          ease: "linear",
-                        }}
-                      >
-                        <Sparkles className="h-5 w-5 text-cyan-400" />
-                      </motion.div>
+                      <Image
+                        src="/icon.png"
+                        alt="Fanyi Charllson logo"
+                        width={32}
+                        height={32}
+                        priority
+                        className="h-7 w-7 rounded-lg"
+                      />
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
                         FANYI
                       </span>
@@ -152,16 +146,14 @@ export function FloatingNav() {
                       href="/"
                       className="font-bold text-xl flex items-center gap-2 mr-8"
                     >
-                      <motion.div
-                        animate={{ rotate: [0, 360] }}
-                        transition={{
-                          duration: 4,
-                          repeat: Number.POSITIVE_INFINITY,
-                          ease: "linear",
-                        }}
-                      >
-                        <Sparkles className="h-5 w-5 text-cyan-400" />
-                      </motion.div>
+                      <Image
+                        src="/icon.png"
+                        alt="Fanyi Charllson logo"
+                        width={32}
+                        height={32}
+                        priority
+                        className="h-7 w-7 rounded-lg"
+                      />
                       <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
                         FANYI
                       </span>

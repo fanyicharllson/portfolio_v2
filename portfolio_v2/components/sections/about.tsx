@@ -22,13 +22,13 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center mt-16 sm:mt-20">
             <div className="relative">
               <div className="absolute -inset-4 sm:-inset-6 rounded-2xl bg-gradient-to-r from-cyan-500/15 to-blue-500/15 blur-2xl opacity-80"></div>
-              <div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-700/50 shadow-2xl">
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border-2 border-slate-700/50 shadow-2xl">
                 <Image
-                  src="/cto.jpeg"
+                  src="/cto.png"
                   alt="Fanyi Charllson"
-                  className="w-full h-full object-cover object-center"
-                  width={500}
-                  height={300}
+                  className="w-full h-full object-cover object-top"
+                  width={653}
+                  height={895}
                   priority
                 />
 

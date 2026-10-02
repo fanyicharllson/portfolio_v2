@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, type CSSProperties } from "react";
+import { motion, useInView } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -25,6 +25,10 @@ export function InfiniteScrollSkills({
   const [isPlaying, setIsPlaying] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Only animate while the marquee is actually on screen - once scrolled
+  // past, there's no reason to keep ~45 cards worth of motion running.
+  const isInView = useInView(containerRef, { margin: "200px 0px" });
 
   // Triple the skills for seamless infinite scroll
   const extendedSkills = [...skills, ...skills, ...skills];
@@ -58,6 +62,7 @@ export function InfiniteScrollSkills({
 
       {/* Main scrolling container */}
       <div
+        ref={containerRef}
         className="relative overflow-hidden rounded-2xl bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 p-6 sm:p-8"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -72,7 +77,7 @@ export function InfiniteScrollSkills({
           className="flex gap-6 sm:gap-8 will-change-transform"
           animate={{
             x:
-              isPlaying && !isHovered
+              isInView && isPlaying && !isHovered
                 ? [0, -(skills.length * (320 + 32))]
                 : undefined,
           }}
@@ -92,9 +97,9 @@ export function InfiniteScrollSkills({
               whileHover={{ scale: 1.05, y: -8 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="relative overflow-hidden rounded-xl bg-slate-900/60 backdrop-blur-sm border border-slate-700/50 p-6 h-full transition-all duration-300 hover:border-cyan-500/50 group cursor-pointer">
+              <div className="relative overflow-hidden rounded-xl bg-slate-900/80 border border-slate-700/50 p-6 h-full transition-all duration-300 hover:border-cyan-500/50 group cursor-pointer">
                 {/* Animated background */}
-                <motion.div
+                <div
                   className="absolute -inset-1 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                   style={{
                     background:
@@ -155,17 +160,20 @@ export function InfiniteScrollSkills({
                         viewport={{ once: true }}
                       />
 
-                      {/* Animated shine effect */}
-                      <motion.div
-                        className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full"
-                        animate={{ x: [-32, 320] }}
-                        transition={{
-                          duration: 2.5,
-                          repeat: Number.POSITIVE_INFINITY,
-                          ease: "linear",
-                          delay: Math.random() * 2,
-                        }}
-                      />
+                      {/* Animated shine effect - CSS only, no per-card JS loop */}
+                      {isInView && (
+                        <div
+                          className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full animate-sweep-linear"
+                          style={
+                            {
+                              "--sweep-from": "-32px",
+                              "--sweep-to": "320px",
+                              animationDuration: "2.5s",
+                              animationDelay: `${(index % 7) * 0.3}s`,
+                            } as CSSProperties
+                          }
+                        />
+                      )}
                     </div>
 
                     {/* Skill level indicator */}

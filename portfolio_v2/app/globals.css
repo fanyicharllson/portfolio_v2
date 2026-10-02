@@ -180,6 +180,115 @@
   animation: glow 4s ease-in-out infinite;
 }
 
+/*
+  GPU-cheap decorative animation primitives.
+  These replace JS-driven (Framer Motion) infinite loops for elements that
+  are visible for the entire session (background effects, nav, badges),
+  so the compositor can run them without per-frame React/JS work.
+  Duration/scale per element is tuned via CSS custom properties set inline.
+*/
+
+@keyframes pulse-scale-opacity {
+  0%,
+  100% {
+    transform: scale(var(--pulse-from, 1));
+    opacity: var(--opacity-from, 0.4);
+  }
+  50% {
+    transform: scale(var(--pulse-to, 1.2));
+    opacity: var(--opacity-to, 0.7);
+  }
+}
+.animate-pulse-scale {
+  animation: pulse-scale-opacity ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes rotate-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-rotate-cw {
+  animation: rotate-cw linear infinite;
+  will-change: transform;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(var(--sweep-from, -100%));
+  }
+  70% {
+    transform: translateX(var(--sweep-to, 200%));
+  }
+  100% {
+    transform: translateX(var(--sweep-to, 200%));
+  }
+}
+.animate-shimmer-sweep {
+  animation: shimmer-sweep linear infinite;
+  will-change: transform;
+}
+
+@keyframes sweep-linear {
+  from {
+    transform: translateX(var(--sweep-from, -100%));
+  }
+  to {
+    transform: translateX(var(--sweep-to, 100%));
+  }
+}
+.animate-sweep-linear {
+  animation: sweep-linear linear infinite;
+  will-change: transform;
+}
+
+@keyframes bg-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.animate-bg-pan {
+  background-size: 300% 300%;
+  animation: bg-pan linear infinite;
+}
+
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+.animate-ping-soft {
+  animation: ping-soft ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-scale,
+  .animate-rotate-cw,
+  .animate-shimmer-sweep,
+  .animate-sweep-linear,
+  .animate-bg-pan,
+  .animate-ping-soft,
+  .animate-blob,
+  .animate-float,
+  .animate-glow {
+    animation: none !important;
+  }
+}
+
 /* Custom scrollbar with new colors */
 ::-webkit-scrollbar {
   width: 10px;

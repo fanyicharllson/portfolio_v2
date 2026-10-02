@@ -7,8 +7,18 @@ export function MagneticCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [cursorVariant, setCursorVariant] = useState("default")
   const [isVisible, setIsVisible] = useState(false)
+  // Touch/coarse-pointer devices (phones, tablets) have no real cursor to
+  // follow - skip mounting this entirely there instead of paying for
+  // listeners and a spring animation that will never be seen.
+  const [isTouchDevice, setIsTouchDevice] = useState(true)
 
   useEffect(() => {
+    setIsTouchDevice(!window.matchMedia("(pointer: fine)").matches)
+  }, [])
+
+  useEffect(() => {
+    if (isTouchDevice) return
+
     let lastTime = 0
     const throttleDelay = 10 // ms
 
@@ -49,7 +59,7 @@ export function MagneticCursor() {
       window.removeEventListener("mousemove", handleMouseMove)
       document.body.removeEventListener("mouseleave", handleMouseLeave)
     }
-  }, [])
+  }, [isTouchDevice])
 
   const variants = {
     default: {
@@ -74,6 +84,8 @@ export function MagneticCursor() {
       border: "2px solid rgba(16, 185, 129, 0.8)",
     },
   }
+
+  if (isTouchDevice) return null
 
   return (
     <>

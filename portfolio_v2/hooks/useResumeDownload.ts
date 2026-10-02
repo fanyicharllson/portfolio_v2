@@ -24,7 +24,7 @@ export const useResumeDownload = (
 
   const downloadResume = useCallback(async () => {
 
-    const defaultResumeUrl = resumeUrl || "/my_cv.pdf";
+    const defaultResumeUrl = resumeUrl || "/my_cv_v4.pdf";
     const defaultFileName = fileName || "Fanyi_Charllson_Resume.pdf";
 
     setState({ isDownloading: true, error: null });

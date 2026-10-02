@@ -9,7 +9,7 @@ import {
   Environment,
   PerspectiveCamera,
 } from "@react-three/drei";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import type * as THREE from "three";
 import { ModelErrorBoundary } from "./errorboundary";
 import { RGBELoader } from "three-stdlib";
@@ -165,9 +165,18 @@ export function Floating3DModels() {
   const [activeModel, setActiveModel] = useState<"laptop" | "code" | "tech">(
     "laptop"
   );
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Keep the WebGL render loop from running while this section is off
+  // screen - react-three-fiber renders every frame by default, which is
+  // expensive on mobile GPUs and pointless when nothing is visible.
+  const isInView = useInView(containerRef, {
+    margin: "200px 0px",
+    once: false,
+  });
 
   return (
     <motion.div
+      ref={containerRef}
       className="w-full h-96 relative"
       initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
@@ -175,27 +184,29 @@ export function Floating3DModels() {
       viewport={{ once: true }}
     >
       <div className="absolute inset-0 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-sm border border-slate-700/50">
-        <ModelErrorBoundary>
-          <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-            <OrbitControls enableZoom={false} enablePan={false} />
+        {isInView && (
+          <ModelErrorBoundary>
+            <Canvas dpr={[1, 1.5]}>
+              <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+              <OrbitControls enableZoom={false} enablePan={false} />
 
-            <ambientLight intensity={0.4} />
-            <pointLight position={[10, 10, 10]} intensity={1} color="#06b6d4" />
-            <pointLight
-              position={[-10, -10, -10]}
-              intensity={0.5}
-              color="#0ea5e9"
-            />
+              <ambientLight intensity={0.4} />
+              <pointLight position={[10, 10, 10]} intensity={1} color="#06b6d4" />
+              <pointLight
+                position={[-10, -10, -10]}
+                intensity={0.5}
+                color="#0ea5e9"
+              />
 
-            <Suspense fallback={null}>
-              <SafeEnvironment />
-              {activeModel === "laptop" && <FloatingLaptop />}
-              {activeModel === "code" && <FloatingCode />}
-              {activeModel === "tech" && <TechIcons />}
-            </Suspense>
-          </Canvas>
-        </ModelErrorBoundary>
+              <Suspense fallback={null}>
+                <SafeEnvironment />
+                {activeModel === "laptop" && <FloatingLaptop />}
+                {activeModel === "code" && <FloatingCode />}
+                {activeModel === "tech" && <TechIcons />}
+              </Suspense>
+            </Canvas>
+          </ModelErrorBoundary>
+        )}
 
         {/* Loading indicator that shows while 3D models are loading */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

@@ -7,7 +7,7 @@ export const mockProjects: Project[] = [
     description:
       "A modern charity and donation platform empowering users to support verified causes, track their impact, and give back effortlessly.",
     tags: ["React", "SupaBase", "Tailwind CSS", "Next.js"],
-    image: "/CharityHub.jpg",
+    image: "/charityHub.jpg",
     demoUrl: "https://charityhub-rho.vercel.app",
     repoUrl: "https://github.com/fanyicharllson/CharityHub",
     category: "web",
