@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import { PORTFOLIO_CONTEXT } from "@/lib/portfolio-context";
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+interface ChatHistoryMessage {
+  role: string;
+  content: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,46 +18,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if API key is configured
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: "Gemini API key not configured" },
+        { error: "Groq API key not configured" },
         { status: 500 }
       );
     }
 
-    // Get the generative model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-    // Build conversation history
-    let conversationContext = PORTFOLIO_CONTEXT + "\n\nConversation:\n";
+    const messages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: "system", content: PORTFOLIO_CONTEXT },
+    ];
 
     if (history && Array.isArray(history)) {
-      history.forEach((msg: any) => {
-        conversationContext += `${
-          msg.role === "user" ? "User" : "Assistant"
-        }: ${msg.content}\n`;
+      (history as ChatHistoryMessage[]).forEach((msg) => {
+        messages.push({
+          role: msg.role === "user" ? "user" : "assistant",
+          content: msg.content,
+        });
       });
     }
 
-    conversationContext += `User: ${message}\nAssistant:`;
+    messages.push({ role: "user", content: message });
 
-    // Generate response
-    const result = await model.generateContent(conversationContext);
-    const response = await result.response;
-    const text = response.text();
+    const completion = await groq.chat.completions.create({
+      model: "openai/gpt-oss-20b",
+      messages,
+    });
+
+    const text = completion.choices[0]?.message?.content ?? "";
 
     return NextResponse.json({
       response: text,
       success: true,
     });
-  } catch (error: any) {
-    console.error("Gemini API error:", error);
+  } catch (error) {
+    console.error("Groq API error:", error);
 
     return NextResponse.json(
       {
         error: "Failed to generate response",
-        details: error.message || "Unknown error",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
